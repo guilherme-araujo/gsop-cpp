@@ -4,8 +4,8 @@ class Eph{
     public:
     
     double bonus;
-
-    Eph(double b){
+	
+	Eph(double b){
         this->bonus = b;
     }
 

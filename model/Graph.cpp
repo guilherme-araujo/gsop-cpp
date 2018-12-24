@@ -9,4 +9,7 @@ class GsopGraph{
 
     vector< vector<int> > adjMatrix;
 
+	int size(){
+		return nodes.size();
+	}
 };

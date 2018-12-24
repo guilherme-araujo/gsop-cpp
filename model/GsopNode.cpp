@@ -13,11 +13,15 @@ class GsopNode{
     int val;
     double coeff;
     int fitness;
-    Eph eph;
+    Eph *eph;
 
     vector<int> neighbors;
 
+	GsopNode(){
+		this->eph = NULL;
+	}
+	
     double getCoeff(){
-        return this->coeff+this->eph.bonus;
+        return this->coeff+this->eph->bonus;
     }
 };
