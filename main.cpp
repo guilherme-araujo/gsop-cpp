@@ -3,6 +3,7 @@
 #include <thread>
 #include "utils/graphParser.cpp"
 #include "simulation.cpp"
+//#include "model/SimulationData.cpp"
 
 
 using namespace std;
@@ -66,6 +67,21 @@ int main(int argc, char* argv[]){
 	GsopGraph *g = p.parse("graph.txt");
 	cout<<g->size()<<endl;
 	
+	//Build SimulationData object
+	SimulationData simulationData;
+	
+	simulationData.ephBonus = ephBonus;
+	simulationData.ephStartRatio = ephStartRatio;
+	simulationData.ephBirthGenerationChance = 0.5;
+	simulationData.aOnly = false;
+	simulationData.neighborhoodInheritance = true;
+	simulationData.birthRate = 1.04;
+	simulationData.deathRate = 1.04;
+	simulationData.plotDensity = 100;
+	simulationData.cycles = cycles;
+	simulationData.initialPop = numNodes;
+	simulationData.ephTime = ephTime;
+	
 	//Launch simulation threads according to number of samples
 	vector<thread> tl;
 	tl.resize(threads);
@@ -84,7 +100,8 @@ int main(int argc, char* argv[]){
 		}
 		for(ti = 0; ti < threads; ti++){
 			if(!tb[ti] && scount!=samples){
-				tl[ti] = thread(Simulation::simulationV6,scount);
+				//tl[ti] = thread(Simulation::simulationV6,scount);
+				tl[ti] = thread(Simulation::simulationV6,simulationData);
 				tb[ti] = true;
 				scount++;
 			}
