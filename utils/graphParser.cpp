@@ -52,6 +52,7 @@ class Parser{
 					//cout<<neighbor<<" ";
 					n.neighbors.push_back(stoi(neighbor));
 				}
+				n.id = stoi(nodenum);
 				//cout<<endl;
 				g->nodes[nindex] = n;
 				nindex++;
@@ -59,13 +60,14 @@ class Parser{
 			}
 		}
 		
+		/*
 		for(int i = 0; i < numNodes; i++){
 			cout<<"node "<<i<<": ";
 			for(int j = 0; j < g->nodes[i].neighbors.size(); j++){
 				cout<<g->nodes[i].neighbors[j]<<" ";	
 			}
 			cout<<endl;
-		}
+		}*/
 			  
 		return g;
 	}

@@ -22,6 +22,13 @@ class GsopNode{
 	}
 	
     double getCoeff(){
-        return this->coeff+this->eph->bonus;
+        return this->coeff+this->getBonus();
     }
+	
+	double getBonus(){
+		if(this->eph != NULL){
+			return this->eph->bonus;	
+		} else return 0;
+	}
+	
 };

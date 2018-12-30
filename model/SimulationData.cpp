@@ -18,5 +18,6 @@ class SimulationData{
 	bool aOnly;
 	int ephTime;
 	vector<string> nodeDetail;
+	GsopGraph *g;
 	
 };
