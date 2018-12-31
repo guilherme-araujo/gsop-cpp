@@ -20,6 +20,8 @@ class SimulationRun{
 		
 		srand(time(NULL));
 		random_shuffle(nodes.begin(), nodes.end());
+
+		//Tornar bidirecional a lista de vizinhança de nós
 		
 		map<int, GsopNode> nodesmap;
 		//random_shuffle		
@@ -48,12 +50,17 @@ class SimulationRun{
 		}
 		
 		
-		
+		for(int i = 0; i < nodes.size(); i++){
+			for(set<int>::iterator j = nodes[i].neighbors.begin(); j != nodes[i].neighbors.end(); ++j){
+				nodesmap[*j].neighbors.insert(nodes[i].id);
+			}
+		}
+				
 		//Início dos ciclos e contagem do tempo
 		clock_t begin = clock();
 		
 		for(int i = 0; i < simulationData.cycles; i++){
-			SimulationCycles::cycleV6(&nodesmap, simulationData.deathRate, simulationData.neighborhoodInheritance);	
+			SimulationCycles::cycleV6(&nodesmap, simulationData);	
 		}
 		
 		clock_t end = clock();
