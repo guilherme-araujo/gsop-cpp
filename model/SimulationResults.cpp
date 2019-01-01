@@ -17,4 +17,5 @@ class SimulationResults{
 	double avgFitness;
 	int fixationCycles;
 	
+	
 };

@@ -16,6 +16,7 @@ class SimulationData{
 	double ephBirthGenerationChance;
 	bool neighborhoodInheritance;
 	bool aOnly;
+	bool ephPopHistory;
 	int ephTime;
 	vector<string> nodeDetail;
 	GsopGraph *g;

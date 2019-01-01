@@ -75,14 +75,15 @@ int main(int argc, char* argv[]){
 	simulationData.ephStartRatio = ephStartRatio;
 	simulationData.ephBirthGenerationChance = 0.5;
 	simulationData.aOnly = false;
-	simulationData.neighborhoodInheritance = true;
+	simulationData.neighborhoodInheritance = false;
 	simulationData.birthRate = 1.04;
 	simulationData.deathRate = 1.04;
 	simulationData.plotDensity = 100;
 	simulationData.cycles = cycles;
-	simulationData.initialPop = numNodes;
+	simulationData.initialPop = g->nodes.size();
 	simulationData.ephTime = ephTime;
 	simulationData.g = g;
+	simulationData.ephPopHistory = ephPopHistory;
 	
 	//Launch simulation threads according to number of samples
 	vector<thread> tl;
@@ -91,6 +92,8 @@ int main(int argc, char* argv[]){
 	tb.resize(threads);
 	
 	int scount = 0;
+	
+	clock_t begin = clock();
 	
 	while(true){
 		int ti = 0;
@@ -121,7 +124,11 @@ int main(int argc, char* argv[]){
 		usleep(100000);
 	}
 	
-	
+	clock_t end = clock();
+		
+	double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
 
+	cout<<"total time: "<<elapsed_secs<<endl;
+	
     return 0;
 }

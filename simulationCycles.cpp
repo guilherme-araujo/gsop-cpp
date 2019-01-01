@@ -63,7 +63,7 @@ class SimulationCycles{
 			cout<<"roleta has "<<roleta.size()<<endl;
 			out.unlock();
 			*/
-			Eph *eph = new Eph(simulationData.ephBonus);
+			Eph *eph = NULL;//new Eph(simulationData.ephBonus);
 			
 			
 			
@@ -75,7 +75,7 @@ class SimulationCycles{
 				mt19937 eng(rd());
 				uniform_int_distribution<> distr(0, roleta.size()-1);
 				int chosen = distr(eng);//rand()%roleta.size();
-				cout<<roleta[chosen]<<" chosen"<<endl;
+				//cout<<roleta[chosen]<<" chosen"<<endl;
 				sorteado = &(*nodes)[roleta[chosen]];
 			}
 			
@@ -102,8 +102,55 @@ class SimulationCycles{
 				
 			}
 			
+			vector<int> currentKeys;
+			for(set<int>::iterator i = neighborsList.begin(); i != neighborsList.end(); ++i){
+				currentKeys.push_back(*i);
+			}
 			
+			random_shuffle(currentKeys.begin(), currentKeys.end());
+			bool pegou = false;
+			for(int i = 0; i < currentKeys.size(); i++){
+				int ckey = currentKeys[i];
+				if((*nodes)[ckey].eph ==NULL && (*nodes)[ckey].type =='A'){
+					(*nodes)[ckey].eph = eph;
+					pegou = true;
+					break;
+				}
+			}
 			
+			if(!pegou){
+				currentKeys.clear();
+				//for(map <int, GsopNode> :: iterator it = nodes.begin(); it != nodes.end(); ++it){
+				//	currentKeys.push_back(it->first);
+				//}
+				currentKeys = keys;
+				random_shuffle(currentKeys.begin(), currentKeys.end());
+				for(int i = 0; i < currentKeys.size(); i++){
+					int ckey = currentKeys[i];
+					if((*nodes)[ckey].eph ==NULL && (*nodes)[ckey].type =='A'){
+						(*nodes)[ckey].eph = eph;
+						pegou = true;
+						break;
+					}
+				}
+			}
+			
+			if(!pegou) delete eph;
+			
+		}
+		
+		
+		for(int i = 0; i < keys.size(); i++){
+			int keyi = keys[i];
+			GsopNode *n = &(*nodes)[keyi];
+			if(n->eph != NULL){
+				if(n->eph->time == 1){
+					delete n->eph;
+					n->eph = NULL;
+				}else{
+					n->eph->time -= 1;
+				}
+			}
 		}
 		
 		

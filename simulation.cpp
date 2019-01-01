@@ -27,13 +27,22 @@ class Simulation{
 		}*/
 	
 		static void simulationV6(SimulationData simulationData){
-			SimulationResults simulationResults;
 			
-			simulationResults = SimulationRun::runSimV6(simulationData);
-			
+			SimulationResults simulationResults = SimulationRun::runSimV6(simulationData);
 			
 			out.lock();
-			simResults.push_back(simulationResults);
+			//simResults.push_back(simulationResults);
+			if(simulationData.ephPopHistory){
+				for(int i = 0; i < simulationResults.typeAPopHistory.size(); i++){
+					cout<<"cycle "<<i<<" A: "<<simulationResults.typeAPopHistory[i]<<" B: "<<simulationResults.typeBPopHistory[i]<<" Ephs: "<<simulationResults.ephPopHistory[i]<<endl;
+				}
+			}else{
+				int fc = simulationResults.fixationCycles;
+				//cout<<"fc "<<fc<<endl;
+				if(fc==-1) fc = simulationResults.typeAPopHistory.size();
+				cout<<simulationResults.typeAPopHistory[fc]<<";"<<simulationResults.typeBPopHistory[fc]<<";"<<fc<<";"<<simulationResults.elapsedSeconds<<endl;
+			}
+			
 			out.unlock();
 		}
 };
