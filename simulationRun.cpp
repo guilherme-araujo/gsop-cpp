@@ -62,7 +62,7 @@ class SimulationRun{
 		
 		for(int i = 0; i < simulationData.cycles; i++){
 			SimulationCycles::cycleV6(&nodesmap, simulationData);	
-			
+			//cout<<nodesmap.size()<<" graph size"<<endl;
 			int ephCount = 0;
 			int typeACount = 0;
 			int typeBCount = 0;
@@ -78,7 +78,7 @@ class SimulationRun{
 					typeBCount++;
 				}
 			}
-			
+			//cout<<"A: "<<typeACount<<" B: "<<typeBCount<<endl;
 			simulationResults.ephPopHistory.push_back(ephCount);
 			simulationResults.typeAPopHistory.push_back(typeACount);
 			simulationResults.typeBPopHistory.push_back(typeBCount);

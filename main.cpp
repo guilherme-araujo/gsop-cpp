@@ -75,7 +75,7 @@ int main(int argc, char* argv[]){
 	simulationData.ephStartRatio = ephStartRatio;
 	simulationData.ephBirthGenerationChance = 0.5;
 	simulationData.aOnly = false;
-	simulationData.neighborhoodInheritance = false;
+	simulationData.neighborhoodInheritance = true;
 	simulationData.birthRate = 1.04;
 	simulationData.deathRate = 1.04;
 	simulationData.plotDensity = 100;

@@ -99,6 +99,62 @@ class SimulationCycles{
 					}
 				}
 			}else{
+								GsopNode *dyingNode = &(*nodes)[selectedKeysDeath[0]];
+				//cout<<"dying "<<dyingNode->id<<endl;
+				int selectedId = dyingNode->id;
+				eph = dyingNode->eph;
+				
+				//remove dying node from neighbors' neighborhoods
+				for(set<int>::iterator i = dyingNode->neighbors.begin(); i != dyingNode->neighbors.end(); ++i){
+					GsopNode *neighbor = &(*nodes)[*i];
+					if(!neighbor->id==dyingNode->id){
+						neighbor->neighbors.erase(selectedId);
+					}
+				}
+				
+				nodes->erase(selectedId);
+				selectedKeysDeath.erase(selectedKeysDeath.begin());
+				//generating new node
+				GsopNode newNode;
+				newNode.id = selectedId;
+				newNode.coeff = sorteado->coeff;
+				newNode.type = sorteado->type;
+				newNode.fitness = 0;
+				//new node neighborhood list
+				set<int> newNeighbors;
+				for(set<int>::iterator i = sorteado->neighbors.begin(); i != sorteado->neighbors.end(); ++i){
+					map<int,GsopNode>::iterator it = (*nodes).find(*i);
+					if(it != (*nodes).end()){
+						newNeighbors.insert(*i);
+					}
+				}
+				map<int,GsopNode>::iterator it = (*nodes).find(sorteado->id);
+				if(it != (*nodes).end()){
+					newNeighbors.insert(sorteado->id);
+				}
+				newNode.neighbors = newNeighbors;
+				
+				if(newNode.type == 'A'){
+					random_device rd; 
+					mt19937 eng(rd());
+					uniform_int_distribution<> distr(0, 99);
+					int sorteioGeracao = distr(eng);
+					if (sorteioGeracao < (simulationData.ephBirthGenerationChance * 100)) {
+						Eph *e = new Eph(simulationData.ephBonus);
+						e->time = simulationData.ephTime;
+						newNode.eph = e;
+					}
+				}
+				
+				for(set<int>::iterator i = newNode.neighbors.begin(); i != newNode.neighbors.end(); ++i){
+					it = (*nodes).find(*i);
+					if(it != (*nodes).end()){
+						//GsopNode *neighbor = ;
+						it->second.neighbors.insert(selectedId);
+					}
+				}
+				
+				nodes->insert(pair<int,GsopNode>(selectedId,newNode));
 				
 			}
 			
