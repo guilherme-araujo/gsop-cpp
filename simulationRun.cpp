@@ -52,8 +52,8 @@ class SimulationRun{
 		
 		
 		for(int i = 0; i < nodes.size(); i++){
-			for(set<int>::iterator j = nodes[i].neighbors.begin(); j != nodes[i].neighbors.end(); ++j){
-				nodesmap[*j].neighbors.insert(nodes[i].id);
+			for(int j = 0; j < nodes[i].neighbors.size(); j++){
+				nodesmap[nodes[i].neighbors[j]].neighbors.push_back(nodes[i].id);
 			}
 		}
 				

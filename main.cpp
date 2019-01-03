@@ -19,6 +19,7 @@ int main(int argc, char* argv[]){
 	double ephStartRatio = 0.5;
 	bool ephPopHistory = false;
 	int ephTime = 30;
+	bool ni = false;
 	
 	//Simulation values parsing from argv
 	string arg_samples = "samples";
@@ -29,6 +30,7 @@ int main(int argc, char* argv[]){
 	string arg_ephStartRatio = "ephStartRatio";
 	string arg_ephPopHistory = "ephPopHistory";
 	string arg_ephTime = "ephTime";
+	string arg_ni = "ni";
 	
 	for(int i = 1; i < argc; i+=2){
 		if(arg_samples.compare(argv[i])==0){
@@ -47,7 +49,9 @@ int main(int argc, char* argv[]){
 			ephPopHistory = stoi(argv[i+1]);	
 		}else if(arg_ephTime.compare(argv[i])==0){
 			ephTime = stoi(argv[i+1]);	
-		}else {
+		}else if(arg_ni.compare(argv[i])==0){
+			ni = stoi(argv[i+1]);
+		}else{
 			cout<<"Wrong option "<<argv[i]<<endl;	
 		}
 		
@@ -75,7 +79,7 @@ int main(int argc, char* argv[]){
 	simulationData.ephStartRatio = ephStartRatio;
 	simulationData.ephBirthGenerationChance = 0.5;
 	simulationData.aOnly = false;
-	simulationData.neighborhoodInheritance = true;
+	simulationData.neighborhoodInheritance = ni;
 	simulationData.birthRate = 1.04;
 	simulationData.deathRate = 1.04;
 	simulationData.plotDensity = 100;

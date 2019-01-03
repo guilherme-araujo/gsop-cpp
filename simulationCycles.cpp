@@ -35,19 +35,21 @@ class SimulationCycles{
 			}
 		}
 		
+		
+		
 		//births
 		for(int keyi = 0; keyi < selectedKeys.size(); keyi++){
 			int key = selectedKeys[keyi];
 			GsopNode *n = &(*nodes)[key];
 			
 			vector<int> roleta;
-			set<int> neighborsList = n->neighbors;
+			vector<int> neighborsList = n->neighbors;
 			
-			neighborsList.insert(key);
+			//neighborsList.insert(key);
 			
 			
-			for(set<int>::iterator i = neighborsList.begin(); i != neighborsList.end(); ++i){	
-				GsopNode neighbor = (*nodes)[*i];
+			for(int i = 0; i < neighborsList.size(); i++){	
+				GsopNode neighbor = (*nodes)[neighborsList[i]];
 				
 				int qtd = (int) (neighbor.getCoeff()*100);
 				for(int j = 0; j < qtd; j++){
@@ -99,20 +101,42 @@ class SimulationCycles{
 					}
 				}
 			}else{
-								GsopNode *dyingNode = &(*nodes)[selectedKeysDeath[0]];
-				//cout<<"dying "<<dyingNode->id<<endl;
+				
+			clock_t begin = clock();
+				GsopNode *dyingNode = &(*nodes)[selectedKeysDeath[0]];
+				//cout<<"dying "<<dyingNode->id<<" sorteado "<<sorteado->id<<endl;
+				
 				int selectedId = dyingNode->id;
 				eph = dyingNode->eph;
-				
+
 				//remove dying node from neighbors' neighborhoods
-				for(set<int>::iterator i = dyingNode->neighbors.begin(); i != dyingNode->neighbors.end(); ++i){
-					GsopNode *neighbor = &(*nodes)[*i];
-					if(!neighbor->id==dyingNode->id){
-						neighbor->neighbors.erase(selectedId);
+				for(int i = 0; i < dyingNode->neighbors.size(); i++){
+					GsopNode *neighbor = &(*nodes)[dyingNode->neighbors[i]];
+					//cout<<"teste dying "<<selectedId<<" de "<<neighbor->id<<endl;
+					vector<int> updatedNList;
+					
+						
+					
+					if(neighbor->id!=dyingNode->id){
+						/*for(int j = 0; j < neighbor->neighbors.size(); j++){
+							if(neighbor->neighbors[j]!=selectedId){
+								updatedNList.push_back(neighbor->neighbors[j]);
+							}
+						}
+						neighbor->neighbors = updatedNList;*/
+					//	cout<<"apagando "<<selectedId<<" de "<<neighbor->id<<endl;
+						//neighbor->neighbors.erase(selectedId);
+						vector<int>::iterator it = find(neighbor->neighbors.begin(), neighbor->neighbors.end(), selectedId);
+						neighbor->neighbors.erase(it);
 					}
 				}
 				
-				nodes->erase(selectedId);
+			clock_t end = clock();
+		
+			double elapsed_secs = double(end - begin) / (CLOCKS_PER_SEC/1000000);
+			cout<<"t1 "<<elapsed_secs;
+
+			begin = clock();
 				selectedKeysDeath.erase(selectedKeysDeath.begin());
 				//generating new node
 				GsopNode newNode;
@@ -121,18 +145,38 @@ class SimulationCycles{
 				newNode.type = sorteado->type;
 				newNode.fitness = 0;
 				//new node neighborhood list
-				set<int> newNeighbors;
-				for(set<int>::iterator i = sorteado->neighbors.begin(); i != sorteado->neighbors.end(); ++i){
+				vector<int> newNeighbors = sorteado->neighbors;
+			end = clock();
+				
+			elapsed_secs = double(end - begin) / (CLOCKS_PER_SEC/1000000);
+			cout<<" t2 "<<elapsed_secs;
+				
+			begin = clock();
+				
+				newNeighbors.push_back(sorteado->id);
+				
+				/*for(set<int>::iterator i = sorteado->neighbors.begin(); i != sorteado->neighbors.end(); ++i){
 					map<int,GsopNode>::iterator it = (*nodes).find(*i);
 					if(it != (*nodes).end()){
-						newNeighbors.insert(*i);
+						newNeighbors.push_back(*i);
 					}
-				}
-				map<int,GsopNode>::iterator it = (*nodes).find(sorteado->id);
-				if(it != (*nodes).end()){
-					newNeighbors.insert(sorteado->id);
-				}
+				}*/
+				
+				nodes->erase(selectedId);
+			
+			end = clock();
+			elapsed_secs = double(end - begin) / (CLOCKS_PER_SEC/1000000);
+			cout<<" t3 "<<elapsed_secs;
+				//map<int,GsopNode>::iterator it = (*nodes).find(sorteado->id);
+				//if(it != (*nodes).end()){
+				
+				//}
+				//set<int> newNeighborsSet(newNeighbors.begin(), newNeighbors.end());
+				
+			begin = clock();
+				
 				newNode.neighbors = newNeighbors;
+				cout<<" "<<newNeighbors.size();
 				
 				if(newNode.type == 'A'){
 					random_device rd; 
@@ -146,21 +190,34 @@ class SimulationCycles{
 					}
 				}
 				
-				for(set<int>::iterator i = newNode.neighbors.begin(); i != newNode.neighbors.end(); ++i){
-					it = (*nodes).find(*i);
+			end = clock();
+			elapsed_secs = double(end - begin) / (CLOCKS_PER_SEC/1000000);
+			cout<<" t4 "<<elapsed_secs;
+			begin = clock();
+				
+				for(int i = 0 ;i < newNode.neighbors.size(); i++){
+					map<int,GsopNode>::iterator it = (*nodes).find(newNode.neighbors[i]);
 					if(it != (*nodes).end()){
 						//GsopNode *neighbor = ;
-						it->second.neighbors.insert(selectedId);
+						it->second.neighbors.push_back(selectedId);
 					}
 				}
 				
+			end = clock();
+			elapsed_secs = double(end - begin) / (CLOCKS_PER_SEC/1000000);
+			cout<<" t5 "<<elapsed_secs;
+			begin = clock();
+				
 				nodes->insert(pair<int,GsopNode>(selectedId,newNode));
 				
+			end = clock();
+			elapsed_secs = double(end - begin) / (CLOCKS_PER_SEC/1000000);
+			cout<<" t6 "<<elapsed_secs<<endl;
 			}
 			
 			vector<int> currentKeys;
-			for(set<int>::iterator i = neighborsList.begin(); i != neighborsList.end(); ++i){
-				currentKeys.push_back(*i);
+			for(int i = 0; i < neighborsList.size(); i++){
+				currentKeys.push_back(neighborsList[i]);
 			}
 			
 			random_shuffle(currentKeys.begin(), currentKeys.end());

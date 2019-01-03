@@ -50,7 +50,7 @@ class Parser{
 				GsopNode n;
 				while(getline(nodelist,neighbor,' ')){
 					//cout<<neighbor<<" ";
-					n.neighbors.insert(stoi(neighbor));
+					n.neighbors.push_back(stoi(neighbor));
 				}
 				n.id = stoi(nodenum);
 				//cout<<endl;

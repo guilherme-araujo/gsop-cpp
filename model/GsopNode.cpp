@@ -15,7 +15,7 @@ class GsopNode{
     int fitness;
     Eph *eph;
 
-    set<int> neighbors;
+    vector<int> neighbors;
 
 	GsopNode(){
 		this->eph = NULL;
