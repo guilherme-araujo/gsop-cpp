@@ -131,12 +131,12 @@ class SimulationCycles{
 					}
 				}
 				
-			clock_t end = clock();
+			//clock_t end = clock();
 		
-			double elapsed_secs = double(end - begin) / (CLOCKS_PER_SEC/1000000);
-			cout<<"t1 "<<elapsed_secs;
+			//double elapsed_secs = double(end - begin) / (CLOCKS_PER_SEC/1000000);
+			//cout<<"t1 "<<elapsed_secs;
 
-			begin = clock();
+			//begin = clock();
 				selectedKeysDeath.erase(selectedKeysDeath.begin());
 				//generating new node
 				GsopNode newNode;
@@ -146,12 +146,12 @@ class SimulationCycles{
 				newNode.fitness = 0;
 				//new node neighborhood list
 				vector<int> newNeighbors = sorteado->neighbors;
-			end = clock();
+			//end = clock();
 				
-			elapsed_secs = double(end - begin) / (CLOCKS_PER_SEC/1000000);
-			cout<<" t2 "<<elapsed_secs;
+			//elapsed_secs = double(end - begin) / (CLOCKS_PER_SEC/1000000);
+			//cout<<" t2 "<<elapsed_secs;
 				
-			begin = clock();
+			//begin = clock();
 				
 				newNeighbors.push_back(sorteado->id);
 				
@@ -164,19 +164,19 @@ class SimulationCycles{
 				
 				nodes->erase(selectedId);
 			
-			end = clock();
-			elapsed_secs = double(end - begin) / (CLOCKS_PER_SEC/1000000);
-			cout<<" t3 "<<elapsed_secs;
+			//end = clock();
+			//elapsed_secs = double(end - begin) / (CLOCKS_PER_SEC/1000000);
+			//cout<<" t3 "<<elapsed_secs;
 				//map<int,GsopNode>::iterator it = (*nodes).find(sorteado->id);
 				//if(it != (*nodes).end()){
 				
 				//}
 				//set<int> newNeighborsSet(newNeighbors.begin(), newNeighbors.end());
 				
-			begin = clock();
+			//begin = clock();
 				
 				newNode.neighbors = newNeighbors;
-				cout<<" "<<newNeighbors.size();
+			//	cout<<" "<<newNeighbors.size();
 				
 				if(newNode.type == 'A'){
 					random_device rd; 
@@ -190,10 +190,10 @@ class SimulationCycles{
 					}
 				}
 				
-			end = clock();
-			elapsed_secs = double(end - begin) / (CLOCKS_PER_SEC/1000000);
-			cout<<" t4 "<<elapsed_secs;
-			begin = clock();
+			//end = clock();
+			//elapsed_secs = double(end - begin) / (CLOCKS_PER_SEC/1000000);
+			//cout<<" t4 "<<elapsed_secs;
+			//begin = clock();
 				
 				for(int i = 0 ;i < newNode.neighbors.size(); i++){
 					map<int,GsopNode>::iterator it = (*nodes).find(newNode.neighbors[i]);
@@ -203,16 +203,16 @@ class SimulationCycles{
 					}
 				}
 				
-			end = clock();
-			elapsed_secs = double(end - begin) / (CLOCKS_PER_SEC/1000000);
-			cout<<" t5 "<<elapsed_secs;
-			begin = clock();
+			//end = clock();
+			//elapsed_secs = double(end - begin) / (CLOCKS_PER_SEC/1000000);
+			//cout<<" t5 "<<elapsed_secs;
+			//begin = clock();
 				
 				nodes->insert(pair<int,GsopNode>(selectedId,newNode));
 				
-			end = clock();
-			elapsed_secs = double(end - begin) / (CLOCKS_PER_SEC/1000000);
-			cout<<" t6 "<<elapsed_secs<<endl;
+			//end = clock();
+			//elapsed_secs = double(end - begin) / (CLOCKS_PER_SEC/1000000);
+			//cout<<" t6 "<<elapsed_secs<<endl;
 			}
 			
 			vector<int> currentKeys;
