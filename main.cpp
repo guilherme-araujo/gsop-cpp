@@ -97,7 +97,7 @@ int main(int argc, char* argv[]){
 	//Launch simulation threads according to number of samples
 	vector<thread> tl;
 	tl.resize(threads);
-	vector<bool> tb;
+	vector<bool> tb; //false as not running
 	tb.resize(threads);
 	
 	int scount = 0;
@@ -106,16 +106,26 @@ int main(int argc, char* argv[]){
 	
 	while(true){
 		int ti = 0;
-		for(ti = 0; ti < threads; ti++){
+		/*cout<<"thread status ";
+		for(ti = 0; ti < threads; ti++){			
 			if(tl[ti].joinable()){
+				cout<<" 1 ";
 				tl[ti].join();
 				tb[ti] = false;
-			}
+			}else cout<<" 0 ";
+			cout<<" "<<tb[ti]<<" ";
 		}
+		cout<<endl;*/
+		
 		for(ti = 0; ti < threads; ti++){
+			if(!tb[ti]){
+				if(tl[ti].joinable()){
+					tl[ti].join();
+				}
+			}
 			if(!tb[ti] && scount!=samples){
 				//tl[ti] = thread(Simulation::simulationV6,scount);
-				tl[ti] = thread(Simulation::simulationV6,simulationData);
+				tl[ti] = thread(Simulation::simulationV6,simulationData,&tb,ti);
 				tb[ti] = true;
 				scount++;
 			}
