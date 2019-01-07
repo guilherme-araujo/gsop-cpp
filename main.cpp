@@ -8,6 +8,11 @@
 
 using namespace std;
 
+void waitupdate(){
+	usleep(100000);
+}
+
+
 int main(int argc, char* argv[]){
 
 	//Default simulation values
@@ -125,7 +130,10 @@ int main(int argc, char* argv[]){
 			}
 			if(allover) break;
 		}
-		usleep(100000);
+		
+		thread wait = thread(waitupdate);
+		wait.join();
+		
 	}
 	
 	clock_t end = clock();
