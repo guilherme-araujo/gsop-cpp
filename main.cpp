@@ -1,6 +1,7 @@
 #include <iostream>
 #include <unistd.h>
 #include <thread>
+#include <future>
 #include "utils/graphParser.cpp"
 #include "simulation.cpp"
 //#include "model/SimulationData.cpp"
@@ -104,31 +105,31 @@ int main(int argc, char* argv[]){
 	
 	clock_t begin = clock();
 	
+	vector< future<bool> >fut;
+	fut.resize(threads);
+	
 	while(true){
 		int ti = 0;
-		/*cout<<"thread status ";
-		for(ti = 0; ti < threads; ti++){			
-			if(tl[ti].joinable()){
-				cout<<" 1 ";
-				tl[ti].join();
-				tb[ti] = false;
-			}else cout<<" 0 ";
-			cout<<" "<<tb[ti]<<" ";
-		}
-		cout<<endl;*/
 		
 		for(ti = 0; ti < threads; ti++){
-			if(!tb[ti]){
-				if(tl[ti].joinable()){
-					tl[ti].join();
-				}
-			}
+		
 			if(!tb[ti] && scount!=samples){
-				//tl[ti] = thread(Simulation::simulationV6,scount);
-				tl[ti] = thread(Simulation::simulationV6,simulationData,&tb,ti);
+
+				fut[ti] = async(Simulation::simulationV6,simulationData);
+				
 				tb[ti] = true;
 				scount++;
 			}
+			
+			if(tb[ti]==true){
+				if(fut[ti].wait_for(chrono::seconds(0))==future_status::ready){
+					fut[ti].get();
+					tb[ti] = false;
+				}
+
+			}	
+			
+			
 		}
 		if(scount==samples){
 			bool allover = true;

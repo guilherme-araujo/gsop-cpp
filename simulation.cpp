@@ -26,7 +26,7 @@ class Simulation{
 			out.unlock();
 		}*/
 	
-		static void simulationV6(SimulationData simulationData, vector<bool> *tb, int ti){
+		static bool simulationV6(SimulationData simulationData){
 			
 			SimulationResults simulationResults = SimulationRun::runSimV6(simulationData);
 			
@@ -42,8 +42,10 @@ class Simulation{
 				if(fc==-1) fc = simulationResults.typeAPopHistory.size()-1;
 				cout<<simulationResults.typeAPopHistory[fc]<<";"<<simulationResults.typeBPopHistory[fc]<<";"<<fc<<";"<<simulationResults.elapsedSeconds<<endl;
 			}
-			(*tb)[ti] = false;
+			
 			out.unlock();
+			
+			return true;
 		}
 };
 

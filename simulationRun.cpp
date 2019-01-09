@@ -2,6 +2,7 @@
 //#include "model/SimulationResults.cpp"
 #include <algorithm>
 #include <map>
+#include <random>
 #include "simulationCycles.cpp"
 
 class SimulationRun{
@@ -59,6 +60,8 @@ class SimulationRun{
 				
 		//Início dos ciclos e contagem do tempo
 		clock_t begin = clock();
+		
+		
 		
 		for(int i = 0; i < simulationData.cycles; i++){
 			SimulationCycles::cycleV6(&nodesmap, simulationData);	
