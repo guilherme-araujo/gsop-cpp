@@ -9,6 +9,7 @@ class SimulationRun{
 	
 	public:
 	
+	
 	static SimulationResults runSimV6(SimulationData simulationData){
 		SimulationResults simulationResults;
 		
@@ -61,11 +62,13 @@ class SimulationRun{
 		//Início dos ciclos e contagem do tempo
 		clock_t begin = clock();
 		
-		random_device rd; 
-		mt19937 eng(rd());
+		//random_device rd; 
+		//mt19937 eng(rd());
+		uint32_t state = time(NULL);
+		
 		
 		for(int i = 0; i < simulationData.cycles; i++){
-			SimulationCycles::cycleV6(&nodesmap, simulationData, &eng);	
+			SimulationCycles::cycleV6(&nodesmap, simulationData, &state);	
 			//cout<<nodesmap.size()<<" graph size"<<endl;
 			int ephCount = 0;
 			int typeACount = 0;

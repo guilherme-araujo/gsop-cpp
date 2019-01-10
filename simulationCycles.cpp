@@ -1,10 +1,21 @@
 
 
+int xorshift32(uint32_t *state)
+{
+	/* Algorithm "xor" from p. 4 of Marsaglia, "Xorshift RNGs" */
+	uint32_t x = *state;
+	x ^= x << 13;
+	x ^= x >> 17;
+	x ^= x << 5;
+	*state = x;
+	return (int)x;
+}
+
 class SimulationCycles{
 
 	public:
 	
-	static void cycleV6(map<int,GsopNode> *nodes, SimulationData simulationData, mt19937 *eng){
+	static void cycleV6(map<int,GsopNode> *nodes, SimulationData simulationData, uint32_t *state){
 		//out.lock();
 		//cout<<"no "<<(*nodes)[0].id<<" type "<<(*nodes)[0].type<<" coeff "<<(*nodes)[0].getCoeff()<<endl;
 		//out.unlock();
@@ -73,9 +84,9 @@ class SimulationCycles{
 			if(roleta.size()==0){
 				sorteado = &(*nodes)[key];
 			}else{
-				
-				uniform_int_distribution<> distr(0, roleta.size()-1);
-				int chosen = distr(*eng);//rand()%roleta.size();
+				int chosen = xorshift32(state)%roleta.size();
+				//uniform_int_distribution<> distr(0, roleta.size()-1);
+				//int chosen = distr(*eng);//rand()%roleta.size();
 				//cout<<roleta[chosen]<<" chosen"<<endl;
 				sorteado = &(*nodes)[roleta[chosen]];
 			}
@@ -90,8 +101,9 @@ class SimulationCycles{
 				n->fitness = 0;
 				if(n->type=='A'){
 					
-					uniform_int_distribution<> distr(0, 99);
-					int sorteioGeracao = distr(*eng);
+					//uniform_int_distribution<> distr(0, 99);
+					//int sorteioGeracao = distr(*eng);
+					int sorteioGeracao = xorshift32(state)%100;
 					if (sorteioGeracao < (simulationData.ephBirthGenerationChance * 100)) {
 						Eph *e = new Eph(simulationData.ephBonus);
 						e->time = simulationData.ephTime;
@@ -178,8 +190,9 @@ class SimulationCycles{
 				
 				if(newNode.type == 'A'){
 					
-					uniform_int_distribution<> distr(0, 99);
-					int sorteioGeracao = distr(*eng);
+					//uniform_int_distribution<> distr(0, 99);
+					//int sorteioGeracao = distr(*eng);
+					int sorteioGeracao = xorshift32(state)%100;
 					if (sorteioGeracao < (simulationData.ephBirthGenerationChance * 100)) {
 						Eph *e = new Eph(simulationData.ephBonus);
 						e->time = simulationData.ephTime;
