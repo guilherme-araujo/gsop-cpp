@@ -15,7 +15,7 @@ class SimulationCycles{
 
 	public:
 	
-	static void cycleV6(map<int,GsopNode> *nodes, SimulationData simulationData, uint32_t *state){
+	static void cycleV6(map<int,GsopNode> *nodes, SimulationData simulationData, minstd_rand *eng){
 		//out.lock();
 		//cout<<"no "<<(*nodes)[0].id<<" type "<<(*nodes)[0].type<<" coeff "<<(*nodes)[0].getCoeff()<<endl;
 		//out.unlock();
@@ -32,7 +32,7 @@ class SimulationCycles{
 		for(int i = 0; i < nodes->size(); i++){
 			keys[i] = i;
 		}
-		random_shuffle(keys.begin(), keys.end());
+		shuffle(keys.begin(), keys.end(), *eng);
 		
 		//deaths		
 		for(int i = 0; i < dieCount; i++){
@@ -78,15 +78,15 @@ class SimulationCycles{
 			*/
 			Eph *eph = NULL;//new Eph(simulationData.ephBonus);
 			
-			
+			//clock_t begin = clock();
 			
 			GsopNode *sorteado;
 			if(roleta.size()==0){
 				sorteado = &(*nodes)[key];
 			}else{
-				int chosen = xorshift32(state)%roleta.size();
-				//uniform_int_distribution<> distr(0, roleta.size()-1);
-				//int chosen = distr(*eng);//rand()%roleta.size();
+				//int chosen = xorshift32(state)%roleta.size();
+				uniform_int_distribution<> distr(0, roleta.size()-1);
+				int chosen = distr(*eng);//rand()%roleta.size();
 				//cout<<roleta[chosen]<<" chosen"<<endl;
 				sorteado = &(*nodes)[roleta[chosen]];
 			}
@@ -101,9 +101,9 @@ class SimulationCycles{
 				n->fitness = 0;
 				if(n->type=='A'){
 					
-					//uniform_int_distribution<> distr(0, 99);
-					//int sorteioGeracao = distr(*eng);
-					int sorteioGeracao = xorshift32(state)%100;
+					uniform_int_distribution<> distr(0, 99);
+					int sorteioGeracao = distr(*eng);
+					//int sorteioGeracao = xorshift32(state)%100;
 					if (sorteioGeracao < (simulationData.ephBirthGenerationChance * 100)) {
 						Eph *e = new Eph(simulationData.ephBonus);
 						e->time = simulationData.ephTime;
@@ -112,7 +112,14 @@ class SimulationCycles{
 				}
 			}else{
 				
-			clock_t begin = clock();
+			//clock_t end = clock();
+		
+			//double elapsed_secs = double(end - begin) / (CLOCKS_PER_SEC/1000000);
+			//cout<<"t0 "<<elapsed_secs;
+			
+			//begin = clock();
+			
+			
 				GsopNode *dyingNode = &(*nodes)[selectedKeysDeath[0]];
 				//cout<<"dying "<<dyingNode->id<<" sorteado "<<sorteado->id<<endl;
 				
@@ -141,9 +148,9 @@ class SimulationCycles{
 					}
 				}
 				
-			//clock_t end = clock();
+			//end = clock();
 		
-			//double elapsed_secs = double(end - begin) / (CLOCKS_PER_SEC/1000000);
+			//elapsed_secs = double(end - begin) / (CLOCKS_PER_SEC/1000000);
 			//cout<<"t1 "<<elapsed_secs;
 
 			//begin = clock();
@@ -186,13 +193,13 @@ class SimulationCycles{
 			//begin = clock();
 				
 				newNode.neighbors = newNeighbors;
-			//	cout<<" "<<newNeighbors.size();
+			//cout<<" "<<newNeighbors.size();
 				
 				if(newNode.type == 'A'){
 					
-					//uniform_int_distribution<> distr(0, 99);
-					//int sorteioGeracao = distr(*eng);
-					int sorteioGeracao = xorshift32(state)%100;
+					uniform_int_distribution<> distr(0, 99);
+					int sorteioGeracao = distr(*eng);
+					//int sorteioGeracao = xorshift32(state)%100;
 					if (sorteioGeracao < (simulationData.ephBirthGenerationChance * 100)) {
 						Eph *e = new Eph(simulationData.ephBonus);
 						e->time = simulationData.ephTime;
@@ -230,7 +237,9 @@ class SimulationCycles{
 				currentKeys.push_back(neighborsList[i]);
 			}
 			
-			random_shuffle(currentKeys.begin(), currentKeys.end());
+			//begin = clock();
+			
+			shuffle(currentKeys.begin(), currentKeys.end(), *eng);
 			bool pegou = false;
 			for(int i = 0; i < currentKeys.size(); i++){
 				int ckey = currentKeys[i];
@@ -241,13 +250,17 @@ class SimulationCycles{
 				}
 			}
 			
+			//end = clock();
+			//elapsed_secs = double(end - begin) / (CLOCKS_PER_SEC/1000000);
+			//cout<<" t7 "<<elapsed_secs<<endl;
+			
 			if(!pegou){
 				currentKeys.clear();
 				//for(map <int, GsopNode> :: iterator it = nodes.begin(); it != nodes.end(); ++it){
 				//	currentKeys.push_back(it->first);
 				//}
 				currentKeys = keys;
-				random_shuffle(currentKeys.begin(), currentKeys.end());
+				shuffle(currentKeys.begin(), currentKeys.end(), *eng);
 				for(int i = 0; i < currentKeys.size(); i++){
 					int ckey = currentKeys[i];
 					if((*nodes)[ckey].eph ==NULL && (*nodes)[ckey].type =='A'){
