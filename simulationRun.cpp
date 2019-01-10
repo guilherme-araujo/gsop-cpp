@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <map>
 #include <random>
+#include <chrono>
 #include "simulationCycles.cpp"
 
 class SimulationRun{
@@ -10,7 +11,7 @@ class SimulationRun{
 	public:
 	
 	
-	static SimulationResults runSimV6(SimulationData simulationData){
+	static SimulationResults runSimV6(SimulationData simulationData, int ti){
 		SimulationResults simulationResults;
 		
 		simulationResults.fixationCycles = -1;
@@ -62,8 +63,8 @@ class SimulationRun{
 		//Início dos ciclos e contagem do tempo
 		clock_t begin = clock();
 		
-		random_device rd; 
-		minstd_rand eng(rd());
+		//random_device rd; 
+		mt19937 eng(ti*clock());
 		//uint32_t state = time(NULL);
 		
 		

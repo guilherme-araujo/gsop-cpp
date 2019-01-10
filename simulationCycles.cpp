@@ -15,7 +15,7 @@ class SimulationCycles{
 
 	public:
 	
-	static void cycleV6(map<int,GsopNode> *nodes, SimulationData simulationData, minstd_rand *eng){
+	static void cycleV6(map<int,GsopNode> *nodes, SimulationData simulationData, mt19937 *eng){
 		//out.lock();
 		//cout<<"no "<<(*nodes)[0].id<<" type "<<(*nodes)[0].type<<" coeff "<<(*nodes)[0].getCoeff()<<endl;
 		//out.unlock();

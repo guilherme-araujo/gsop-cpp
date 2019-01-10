@@ -26,9 +26,9 @@ class Simulation{
 			out.unlock();
 		}*/
 	
-		static bool simulationV6(SimulationData simulationData){
+		static bool simulationV6(SimulationData simulationData, int ti){
 			
-			SimulationResults simulationResults = SimulationRun::runSimV6(simulationData);
+			SimulationResults simulationResults = SimulationRun::runSimV6(simulationData, ti);
 			
 			out.lock();
 			//simResults.push_back(simulationResults);
