@@ -61,10 +61,11 @@ class SimulationRun{
 		//Início dos ciclos e contagem do tempo
 		clock_t begin = clock();
 		
-		
+		random_device rd; 
+		mt19937 eng(rd());
 		
 		for(int i = 0; i < simulationData.cycles; i++){
-			SimulationCycles::cycleV6(&nodesmap, simulationData);	
+			SimulationCycles::cycleV6(&nodesmap, simulationData, &eng);	
 			//cout<<nodesmap.size()<<" graph size"<<endl;
 			int ephCount = 0;
 			int typeACount = 0;

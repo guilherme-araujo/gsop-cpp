@@ -1,10 +1,10 @@
-#include <random>
+
 
 class SimulationCycles{
 
 	public:
 	
-	static void cycleV6(map<int,GsopNode> *nodes, SimulationData simulationData){
+	static void cycleV6(map<int,GsopNode> *nodes, SimulationData simulationData, mt19937 *eng){
 		//out.lock();
 		//cout<<"no "<<(*nodes)[0].id<<" type "<<(*nodes)[0].type<<" coeff "<<(*nodes)[0].getCoeff()<<endl;
 		//out.unlock();
@@ -73,10 +73,9 @@ class SimulationCycles{
 			if(roleta.size()==0){
 				sorteado = &(*nodes)[key];
 			}else{
-				random_device rd; 
-				mt19937 eng(rd());
+				
 				uniform_int_distribution<> distr(0, roleta.size()-1);
-				int chosen = distr(eng);//rand()%roleta.size();
+				int chosen = distr(*eng);//rand()%roleta.size();
 				//cout<<roleta[chosen]<<" chosen"<<endl;
 				sorteado = &(*nodes)[roleta[chosen]];
 			}
@@ -90,10 +89,9 @@ class SimulationCycles{
 				n->type = sorteado->type;
 				n->fitness = 0;
 				if(n->type=='A'){
-					random_device rd; 
-					mt19937 eng(rd());
+					
 					uniform_int_distribution<> distr(0, 99);
-					int sorteioGeracao = distr(eng);
+					int sorteioGeracao = distr(*eng);
 					if (sorteioGeracao < (simulationData.ephBirthGenerationChance * 100)) {
 						Eph *e = new Eph(simulationData.ephBonus);
 						e->time = simulationData.ephTime;
@@ -179,10 +177,9 @@ class SimulationCycles{
 			//	cout<<" "<<newNeighbors.size();
 				
 				if(newNode.type == 'A'){
-					random_device rd; 
-					mt19937 eng(rd());
+					
 					uniform_int_distribution<> distr(0, 99);
-					int sorteioGeracao = distr(eng);
+					int sorteioGeracao = distr(*eng);
 					if (sorteioGeracao < (simulationData.ephBirthGenerationChance * 100)) {
 						Eph *e = new Eph(simulationData.ephBonus);
 						e->time = simulationData.ephTime;
