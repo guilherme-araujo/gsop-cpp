@@ -39,8 +39,9 @@ class Simulation{
 			}else{
 				int fc = simulationResults.fixationCycles;
 				//cout<<"fc "<<fc<<endl;
-				if(fc==-1) fc = simulationResults.typeAPopHistory.size()-1;
-				cout<<simulationResults.typeAPopHistory[fc]<<";"<<simulationResults.typeBPopHistory[fc]<<";"<<fc<<";"<<simulationResults.elapsedSeconds<<endl;
+				int numCycles = simulationResults.typeAPopHistory.size()-1;
+				//if(fc==-1) fc = simulationResults.typeAPopHistory.size()-1;
+				cout<<simulationResults.typeAPopHistory[numCycles]<<";"<<simulationResults.typeBPopHistory[numCycles]<<";"<<fc<<";"<<simulationResults.elapsedSeconds<<endl;
 			}
 			
 			out.unlock();
