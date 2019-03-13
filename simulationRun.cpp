@@ -76,6 +76,8 @@ class SimulationRun{
 			int typeBCount = 0;
 			
 			vector<GsopNode> nodeslist;
+			
+			int degreeCount = 0;
 			for(map<int, GsopNode>::iterator j = nodesmap.begin(); j != nodesmap.end(); ++j){
 				if(j->second.eph != NULL){
 					ephCount++;
@@ -85,11 +87,15 @@ class SimulationRun{
 				}else{
 					typeBCount++;
 				}
+				degreeCount += j->second.neighbors.size();
+			
 			}
-			//cout<<"A: "<<typeACount<<" B: "<<typeBCount<<endl;
+			
+			simulationResults.avgDegree.push_back(degreeCount/nodes.size());
 			simulationResults.ephPopHistory.push_back(ephCount);
 			simulationResults.typeAPopHistory.push_back(typeACount);
 			simulationResults.typeBPopHistory.push_back(typeBCount);
+			
 			
 			if(typeACount == 0 || typeBCount == 0){
 				simulationResults.fixationCycles = i;

@@ -170,7 +170,7 @@ class SimulationCycles{
 				
 			//begin = clock();
 				
-				newNeighbors.push_back(sorteado->id);
+				//newNeighbors.push_back(sorteado->id);
 				
 				/*for(set<int>::iterator i = sorteado->neighbors.begin(); i != sorteado->neighbors.end(); ++i){
 					map<int,GsopNode>::iterator it = (*nodes).find(*i);

@@ -8,6 +8,7 @@ class SimulationResults{
 	vector<int> typeAPopHistory;
 	vector<int> typeBPopHistory;
 	vector<int> ephPopHistory;
+	vector<int> avgDegree;
 	int typeAWithEph;
 	int typeBWithEph;
 	vector<double> partialFitnessAvg;

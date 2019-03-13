@@ -34,7 +34,8 @@ class Simulation{
 			//simResults.push_back(simulationResults);
 			if(simulationData.ephPopHistory){
 				for(int i = 0; i < simulationResults.typeAPopHistory.size(); i++){
-					cout<<"cycle "<<i<<" A: "<<simulationResults.typeAPopHistory[i]<<" B: "<<simulationResults.typeBPopHistory[i]<<" Ephs: "<<simulationResults.ephPopHistory[i]<<endl;
+					//cycle;A;B;ephs;avgDegree
+					cout<<i<<";"<<simulationResults.typeAPopHistory[i]<<";"<<simulationResults.typeBPopHistory[i]<<";"<<simulationResults.ephPopHistory[i]<<";"<<simulationResults.avgDegree[i]<<endl;
 				}
 			}else{
 				int fc = simulationResults.fixationCycles;
