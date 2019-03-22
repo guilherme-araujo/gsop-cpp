@@ -115,7 +115,7 @@ int main(int argc, char* argv[]){
 		
 			if(!tb[ti] && scount!=samples){
 
-				fut[ti] = async(Simulation::simulationV6,simulationData, ti);
+				fut[ti] = async(Simulation::simulationV7,simulationData, ti);
 				
 				tb[ti] = true;
 				scount++;
