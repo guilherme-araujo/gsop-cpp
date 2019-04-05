@@ -18,6 +18,10 @@ class SimulationData{
 	bool aOnly;
 	bool ephPopHistory;
 	int ephTime;
+	//'b' : barabasi-albert. 'e' : erdos-renyi. 'c' : complete. 'r' : regular; 
+	char graphType;
+	
+	int sampleid;
 	vector<string> nodeDetail;
 	GsopGraph *g;
 	

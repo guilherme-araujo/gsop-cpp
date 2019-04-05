@@ -71,7 +71,7 @@ if operation == "newGraph":
 	else:
 		newGraph = nx.barabasi_albert_graph(numNodes, numEdges)
 
-	print(newGraph.number_of_nodes())
+	#print(newGraph.number_of_nodes())
 	
 	#Write base graph to file
 	nx.write_adjlist(newGraph, graphFile)
