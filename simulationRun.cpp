@@ -19,7 +19,12 @@ class SimulationRun{
 		vector<GsopNode> nodes = simulationData.g->nodes;
 
 		srand(time(NULL));
-		random_shuffle(nodes.begin(), nodes.end());
+		random_device rd;
+		array<int, std::mt19937::state_size> seed_data;
+		generate_n(seed_data.data(), seed_data.size(), std::ref(rd));
+		seed_seq seq(std::begin(seed_data), std::end(seed_data));
+		mt19937 eng(seq);
+		shuffle(nodes.begin(), nodes.end(), eng);
 
 		unordered_map<int, GsopNode> nodesmap;
 
@@ -61,7 +66,7 @@ class SimulationRun{
 
 		clock_t begin = clock();
 
-		mt19937 eng(ti*clock());
+
 
 		for(int i = 0; i < simulationData.cycles; i++){
 			SimulationCycles::cycleV7(&nodesmap, simulationData, &eng);
