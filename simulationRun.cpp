@@ -9,9 +9,9 @@
 
 class SimulationRun{
 
-	public:
+public:
 
-    static SimulationResults runSimV7(SimulationData simulationData, int ti){
+	static SimulationResults runSimV7(SimulationData simulationData, int ti){
 		SimulationResults simulationResults;
 
 		simulationResults.fixationCycles = -1;
@@ -46,10 +46,14 @@ class SimulationRun{
 			} else{
 				nodes[i].type = 'B';
 				nodes[i].coeff = 1.0;
-                if (i < (simulationData.initialPop * abrate * simulationData.ephStartRatio)+(simulationData.initialPop * abrate) ) {
-					Eph *e = new Eph(simulationData.ephBonus);
-					e->time = simulationData.ephTime;
-					nodes[i].eph = e;
+				if(simulationData.bEph){
+					if (i < (simulationData.initialPop * abrate * simulationData.ephStartRatio)+(simulationData.initialPop * abrate) ) {
+						Eph *e = new Eph(simulationData.ephBonus);
+						e->time = simulationData.ephTime;
+						nodes[i].eph = e;
+					}else{
+						nodes[i].eph = NULL;
+					}
 				}else{
 					nodes[i].eph = NULL;
 				}

@@ -2,9 +2,9 @@
 #include <string>
 
 class SimulationData{
-	
+
 	public:
-	
+
 	int initialPop;
 	double birthRate;
 	double deathRate;
@@ -18,11 +18,12 @@ class SimulationData{
 	bool aOnly;
 	bool ephPopHistory;
 	int ephTime;
-	//'b' : barabasi-albert. 'e' : erdos-renyi. 'c' : complete. 'r' : regular; 
+	//'b' : barabasi-albert. 'e' : erdos-renyi. 'c' : complete. 'r' : regular;
 	char graphType;
-	
+	bool bEph;
+
 	int sampleid;
 	vector<string> nodeDetail;
 	GsopGraph *g;
-	
+
 };

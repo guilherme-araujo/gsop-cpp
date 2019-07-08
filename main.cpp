@@ -28,7 +28,8 @@ int main(int argc, char* argv[]){
 	bool ni = false;
 	int sampleid = 0;
 	char graphType = 'r';
-	
+	bool bEph = 1;
+
 	//Simulation values parsing from argv
 	string arg_samples = "samples";
 	string arg_cycles = "cycles";
@@ -41,36 +42,39 @@ int main(int argc, char* argv[]){
 	string arg_ni = "ni";
 	string arg_sampleid = "sampleId";
 	string arg_graphtype = "graphType";
-	
+	string arg_bEph = "bEph";
+
 	for(int i = 1; i < argc; i+=2){
 		if(arg_samples.compare(argv[i])==0){
-			samples = stoi(argv[i+1]);	
+			samples = stoi(argv[i+1]);
 		}else if(arg_cycles.compare(argv[i])==0){
-			cycles = stoi(argv[i+1]);	
+			cycles = stoi(argv[i+1]);
 		}else if(arg_numNodes.compare(argv[i])==0){
-			numNodes = stoi(argv[i+1]);	
+			numNodes = stoi(argv[i+1]);
 		}else if(arg_ephBonus.compare(argv[i])==0){
-			ephBonus = stod(argv[i+1]);	
+			ephBonus = stod(argv[i+1]);
 		}else if(arg_threads.compare(argv[i])==0){
-			threads = stoi(argv[i+1]);	
+			threads = stoi(argv[i+1]);
 		}else if(arg_ephStartRatio.compare(argv[i])==0){
-			ephStartRatio = stod(argv[i+1]);	
+			ephStartRatio = stod(argv[i+1]);
 		}else if(arg_ephPopHistory.compare(argv[i])==0){
-			ephPopHistory = stoi(argv[i+1]);	
+			ephPopHistory = stoi(argv[i+1]);
 		}else if(arg_ephTime.compare(argv[i])==0){
-			ephTime = stoi(argv[i+1]);	
+			ephTime = stoi(argv[i+1]);
 		}else if(arg_ni.compare(argv[i])==0){
 			ni = stoi(argv[i+1]);
 		}else if (arg_sampleid.compare(argv[i])==0){
-			sampleid = stoi(argv[i+1]);	
+			sampleid = stoi(argv[i+1]);
 		}else if (arg_graphtype.compare(argv[i])==0){
-			graphType = argv[i+1][0];	
+			graphType = argv[i+1][0];
+		}else if(arg_bEph.compare(argv[i])==0){
+			bEph = stoi(argv[i+1]);
 		}else{
-			cout<<"Wrong option "<<argv[i]<<endl;	
+			cout<<"Wrong option "<<argv[i]<<endl;
 		}
-		
+
 	}
-	
+
 	/*
 	cout<<"samples "<<samples<<endl;
 	cout<<"cycles "<<cycles<<endl;
@@ -85,10 +89,10 @@ int main(int argc, char* argv[]){
 	Parser p;
 	GsopGraph *g = p.parse("graph.txt");
 	//cout<<g->size()<<endl;
-	
+
 	//Build SimulationData object
 	SimulationData simulationData;
-	
+
 	simulationData.ephBonus = ephBonus;
 	simulationData.ephStartRatio = ephStartRatio;
 	simulationData.ephBirthGenerationChance = 0.5;
@@ -104,42 +108,43 @@ int main(int argc, char* argv[]){
 	simulationData.ephPopHistory = ephPopHistory;
 	simulationData.sampleid = sampleid;
 	simulationData.graphType = graphType;
-	
+	simulationData.bEph = bEph;
+
 	//Launch simulation threads according to number of samples
 	vector<thread> tl;
 	tl.resize(threads);
 	vector<bool> tb; //false as not running
 	tb.resize(threads);
-	
+
 	int scount = 0;
-	
+
 	//clock_t begin = clock();
-	
+
 	vector< future<bool> >fut;
 	fut.resize(threads);
-	
+
 	while(true){
 		int ti = 0;
-		
+
 		for(ti = 0; ti < threads; ti++){
-		
+
 			if(!tb[ti] && scount!=samples){
 
 				fut[ti] = async(Simulation::simulationV7,simulationData, ti);
-				
+
 				tb[ti] = true;
 				scount++;
 			}
-			
+
 			if(tb[ti]==true){
 				if(fut[ti].wait_for(chrono::seconds(0))==future_status::ready){
 					fut[ti].get();
 					tb[ti] = false;
 				}
 
-			}	
-			
-			
+			}
+
+
 		}
 		if(scount==samples){
 			bool allover = true;
@@ -151,17 +156,17 @@ int main(int argc, char* argv[]){
 			}
 			if(allover) break;
 		}
-		
+
 		thread wait = thread(waitupdate);
 		wait.join();
-		
+
 	}
-	
+
 	//clock_t end = clock();
-		
+
 	//double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
 
 	//cout<<"total time: "<<elapsed_secs<<endl;
-	
+
     return 0;
 }

@@ -87,7 +87,7 @@ class SimulationCycles{
 				n->coeff = sorteado->coeff;
 				n->type = sorteado->type;
 				n->fitness = 0;
-				//if(n->type=='A'){
+				if(simulationData.bEph ||  n->type=='A'){
 
 					uniform_int_distribution<> distr(0, 99);
 					int sorteioGeracao = distr(*eng);
@@ -97,7 +97,7 @@ class SimulationCycles{
 						e->time = simulationData.ephTime;
 						n->eph = e;
 					}
-				//}
+				}
 			}else{
 
 				GsopNode *dyingNode = &(*nodes)[selectedKeysDeath[0]];
@@ -133,7 +133,7 @@ class SimulationCycles{
 
 				newNode.neighbors = newNeighbors;
 
-				//if(newNode.type == 'A'){
+				if(simulationData.bEph || newNode.type == 'A'){
 
 					uniform_int_distribution<> distr(0, 99);
 					int sorteioGeracao = distr(*eng);
@@ -143,7 +143,7 @@ class SimulationCycles{
 						e->time = simulationData.ephTime;
 						newNode.eph = e;
 					}
-				//}
+				}
 
 				for(int i = 0 ;i < newNode.neighbors.size(); i++){
 					unordered_map<int,GsopNode>::iterator it = (*nodes).find(newNode.neighbors[i]);
