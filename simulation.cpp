@@ -42,7 +42,8 @@ class Simulation{
 				//cout<<"fc "<<fc<<endl;
 				int numCycles = simulationResults.typeAPopHistory.size()-1;
 				//if(fc==-1) fc = simulationResults.typeAPopHistory.size()-1;
-				cout<<simulationResults.typeAPopHistory[numCycles]<<";"<<simulationResults.typeBPopHistory[numCycles]<<";"<<fc<<";"<<simulationResults.elapsedSeconds<<";"<<simulationData.sampleid<<endl;
+				
+				cout<<simulationResults.typeAPopHistory[numCycles]<<";"<<simulationResults.typeBPopHistory[numCycles]<<";"<<fc<<";"<<simulationResults.elapsedSeconds<<";"<<simulationData.sampleid<<";"<<simulationResults.typeAWithEph<<";"<<simulationResults.typeBWithEph<<endl;
 			}
 			
 			out.unlock();
@@ -66,7 +67,7 @@ class Simulation{
 				//cout<<"fc "<<fc<<endl;
 				int numCycles = simulationResults.typeAPopHistory.size()-1;
 				//if(fc==-1) fc = simulationResults.typeAPopHistory.size()-1;
-				cout<<simulationResults.typeAPopHistory[numCycles]<<";"<<simulationResults.typeBPopHistory[numCycles]<<";"<<fc<<";"<<simulationResults.elapsedSeconds<<endl;
+				cout<<simulationResults.typeAPopHistory[numCycles]<<";"<<simulationResults.typeBPopHistory[numCycles]<<";"<<fc<<";"<<simulationResults.elapsedSeconds<<";"<<simulationResults.typeAWithEph<<";"<<simulationResults.typeBWithEph<<endl;
 			}
 			
 			out.unlock();

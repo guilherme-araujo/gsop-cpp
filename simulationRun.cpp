@@ -109,10 +109,28 @@ public:
 
 
 		}
+		
+		
+		int typeACount = 0;
+		int typeBCount = 0;
+		
+		for(unordered_map<int, GsopNode>::iterator j = nodesmap.begin(); j != nodesmap.end(); ++j){
+			if(j->second.eph != NULL){
+				if(j->second.type == 'A'){
+					typeACount++;
+				}else{
+					typeBCount++;
+				}
+			}
+		}
+		
+		simulationResults.typeAWithEph = typeACount;
+		simulationResults.typeBWithEph = typeBCount;
 
 		clock_t end = clock();
 
 		double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
+		
 
 		simulationResults.elapsedSeconds = elapsed_secs;
 
