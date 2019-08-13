@@ -27,6 +27,7 @@ public:
 		shuffle(nodes.begin(), nodes.end(), eng);
 
 		unordered_map<int, GsopNode> nodesmap;
+		simulationData.aOnly = true;
 
 		for(int i = 0; i < nodes.size(); i++){
 			double abrate = 0.5;
@@ -100,12 +101,12 @@ public:
 			simulationResults.typeAPopHistory.push_back(typeACount);
 			simulationResults.typeBPopHistory.push_back(typeBCount);
 
-
+/*
 			if(typeACount == 0 || typeBCount == 0){
 				simulationResults.fixationCycles = i;
 				break;
 			}
-
+*/
 
 
 		}
@@ -217,11 +218,11 @@ public:
 
 
 		}
-		
-		
+
+
 		int typeACount = 0;
 		int typeBCount = 0;
-		
+
 		for(unordered_map<int, GsopNode>::iterator j = nodesmap.begin(); j != nodesmap.end(); ++j){
 			if(j->second.eph != NULL){
 				if(j->second.type == 'A'){
@@ -231,14 +232,14 @@ public:
 				}
 			}
 		}
-		
+
 		simulationResults.typeAWithEph = typeACount;
 		simulationResults.typeBWithEph = typeBCount;
 
 		clock_t end = clock();
 
 		double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
-		
+
 
 		simulationResults.elapsedSeconds = elapsed_secs;
 
