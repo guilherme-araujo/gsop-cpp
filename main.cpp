@@ -29,6 +29,7 @@ int main(int argc, char* argv[]){
 	int sampleid = 0;
 	char graphType = 'r';
 	bool bEph = 1;
+	searchTime = 30;
 
 	//Simulation values parsing from argv
 	string arg_samples = "samples";
@@ -43,6 +44,7 @@ int main(int argc, char* argv[]){
 	string arg_sampleid = "sampleId";
 	string arg_graphtype = "graphType";
 	string arg_bEph = "bEph";
+	string arg_searchTime = "searchTime";
 
 	for(int i = 1; i < argc; i+=2){
 		if(arg_samples.compare(argv[i])==0){
@@ -69,6 +71,8 @@ int main(int argc, char* argv[]){
 			graphType = argv[i+1][0];
 		}else if(arg_bEph.compare(argv[i])==0){
 			bEph = stoi(argv[i+1]);
+		}else if (arg_searchTime.compare(argv[i])==0){
+			searchTime = stoi(argv[i+1]);
 		}else{
 			cout<<"Wrong option "<<argv[i]<<endl;
 		}
@@ -109,6 +113,7 @@ int main(int argc, char* argv[]){
 	simulationData.sampleid = sampleid;
 	simulationData.graphType = graphType;
 	simulationData.bEph = bEph;
+	simulationData.searchTime = searchTime;
 
 	//Launch simulation threads according to number of samples
 	vector<thread> tl;
@@ -130,7 +135,7 @@ int main(int argc, char* argv[]){
 
 			if(!tb[ti] && scount!=samples){
 
-				fut[ti] = async(Simulation::simulationV7,simulationData, ti);
+				fut[ti] = async(Simulation::simulationV8,simulationData, ti);
 
 				tb[ti] = true;
 				scount++;

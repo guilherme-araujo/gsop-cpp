@@ -14,6 +14,7 @@ class GsopNode{
     double coeff;
     int fitness;
     Eph *eph;
+    int searchTime;
 
     vector<int> neighbors;
 
@@ -21,15 +22,15 @@ class GsopNode{
 		this->eph = NULL;
 		this->fitness = 0;
 	}
-	
+
     double getCoeff(){
         return this->coeff+this->getBonus();
     }
-	
+
 	double getBonus(){
 		if(this->eph != NULL){
-			return this->eph->bonus;	
+			return this->eph->bonus;
 		} else return 0;
 	}
-	
+
 };

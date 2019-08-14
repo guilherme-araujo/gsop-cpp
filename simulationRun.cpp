@@ -39,12 +39,20 @@ public:
 				nodes[i].coeff = 1.0;
 				if (i < simulationData.initialPop * abrate * simulationData.ephStartRatio) {
 					Eph *e = new Eph(simulationData.ephBonus);
-					e->time = simulationData.ephTime;
+					//randomize eph time
+					uniform_int_distribution<> distr_eph(1, simulationData.ephBonus);
+					int eTime = distr_eph(eng);
+					e->time = eTime;
 					nodes[i].eph = e;
 				}else{
 					nodes[i].eph = NULL;
 				}
-			} else{
+
+				//randomize search time
+				uniform_int_distribution<> distr_search(1, simulationData.searchTime);
+				int sTime = distr_search(eng);
+				nodes[i].searchTime = sTime;
+			} /*else{
 				nodes[i].type = 'B';
 				nodes[i].coeff = 1.0;
 				if(simulationData.bEph){
@@ -58,7 +66,7 @@ public:
 				}else{
 					nodes[i].eph = NULL;
 				}
-			}
+			}*/
 			nodesmap.insert(pair<int,GsopNode>(nodes[i].id,nodes[i]));
 		}
 
