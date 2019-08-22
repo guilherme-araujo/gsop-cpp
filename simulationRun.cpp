@@ -49,9 +49,9 @@ public:
 				}
 
 				//randomize search time
-				uniform_int_distribution<> distr_search(1, simulationData.searchTime);
-				int sTime = distr_search(eng);
-				nodes[i].searchTime = sTime;
+				uniform_int_distribution<> distr_behavior(1, simulationData.behaviorTime);
+				int sTime = distr_behavior(eng);
+				nodes[i].behaviorTimer = sTime;
 			} else{
 				nodes[i].type = 'B';
 				nodes[i].coeff = 1.0;

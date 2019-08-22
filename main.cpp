@@ -29,7 +29,11 @@ int main(int argc, char* argv[]){
 	int sampleid = 0;
 	char graphType = 'r';
 	bool bEph = 1;
-	searchTime = 30;
+	int behaviorTime = 30;
+	double reuseBonusMultiplierA = 0.3;
+	double reuseBonusMultiplierB = 0.9;
+	double buildingBonusA = 0.9;
+	double buildingBonusB = 0.96
 
 	//Simulation values parsing from argv
 	string arg_samples = "samples";
@@ -44,7 +48,11 @@ int main(int argc, char* argv[]){
 	string arg_sampleid = "sampleId";
 	string arg_graphtype = "graphType";
 	string arg_bEph = "bEph";
-	string arg_searchTime = "searchTime";
+	string arg_behaviorTime = "behaviorTime";
+	string arg_reuseBonusMultiplierA = "rBMA";
+	string arg_reuseBonusMultiplierB = "rBMB";
+	string arg_buildingBonusA = "bBA";
+	string arg_buildingBonusB = "bBB";
 
 	for(int i = 1; i < argc; i+=2){
 		if(arg_samples.compare(argv[i])==0){
@@ -71,8 +79,16 @@ int main(int argc, char* argv[]){
 			graphType = argv[i+1][0];
 		}else if(arg_bEph.compare(argv[i])==0){
 			bEph = stoi(argv[i+1]);
-		}else if (arg_searchTime.compare(argv[i])==0){
-			searchTime = stoi(argv[i+1]);
+		}else if (arg_behaviorTime.compare(argv[i])==0){
+			behaviorTime = stoi(argv[i+1]);
+		}else if (arg_reuseBonusMultiplierA.compare(argv[i])==0){
+			reuseBonusMultiplierA = stoi(argv[i+1]);
+		}else if (arg_reuseBonusMultiplierB.compare(argv[i])==0){
+			reuseBonusMultiplierB = stoi(argv[i+1]);
+		}else if (arg_buildingBonusA.compare(argv[i])==0){
+			buildingBonusA = stoi(argv[i+1]);
+		}else if (arg_buildingBonusB.compare(argv[i])==0){
+			buildingBonusB = stoi(argv[i+1]);
 		}else{
 			cout<<"Wrong option "<<argv[i]<<endl;
 		}
@@ -113,7 +129,11 @@ int main(int argc, char* argv[]){
 	simulationData.sampleid = sampleid;
 	simulationData.graphType = graphType;
 	simulationData.bEph = bEph;
-	simulationData.searchTime = searchTime;
+	simulationData.behaviorTime = behaviorTime;
+	simulationData.reuseBonusMultiplierA = reuseBonusMultiplierA;
+	simulationData.reuseBonusMultiplierB = reuseBonusMultiplierB;
+	simulationData.buildingBonusA = buildingBonusA;
+	simulationData.buildingBonusB = buildingBonusB;
 
 	//Launch simulation threads according to number of samples
 	vector<thread> tl;

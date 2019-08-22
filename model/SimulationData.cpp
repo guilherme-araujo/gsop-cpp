@@ -18,7 +18,12 @@ class SimulationData{
 	bool aOnly;
 	bool ephPopHistory;
 	int ephTime;
-	int searchTime;
+	int behaviorTime;
+	double reuseBonusMultiplierA;
+	double reuseBonusMultiplierB;
+	double buildingBonusA;
+	double buildingBonusB;
+
 	//'b' : barabasi-albert. 'e' : erdos-renyi. 'c' : complete. 'r' : regular;
 	char graphType;
 	bool bEph;

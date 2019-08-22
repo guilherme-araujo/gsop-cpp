@@ -5,10 +5,10 @@
 using namespace std;
 
 enum NodeState{
-  SEARCHING,
-  PRODUCING,
-  USING,
-  USING_SHARED
+  SEARCHING,    //behaviorTimer begins at ephTime
+  PRODUCING,    //behaviorTimer begins at ephTime
+  USING,        //behavior lasts remaining ephTime (behaviorTimer == 0)
+  USING_SHARED  //behavior lasts remaining ephTime (behaviorTimer == 0)
 
 };
 
@@ -22,7 +22,8 @@ class GsopNode{
     double coeff;
     int fitness;
     Eph *eph;
-    int searchTime;
+    int behaviorTimer;
+    NodeState behaviour;
 
     vector<int> neighbors;
 
