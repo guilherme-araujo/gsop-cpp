@@ -4,6 +4,14 @@
 
 using namespace std;
 
+enum NodeState{
+  SEARCHING,
+  PRODUCING,
+  USING,
+  USING_SHARED
+
+};
+
 class GsopNode{
     public:
 
@@ -23,9 +31,9 @@ class GsopNode{
 		this->fitness = 0;
 	}
 
-    double getCoeff(){
-        return this->coeff+this->getBonus();
-    }
+  double getCoeff(){
+    return this->coeff+this->getBonus();
+  }
 
 	double getBonus(){
 		if(this->eph != NULL){

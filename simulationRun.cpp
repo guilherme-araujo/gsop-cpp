@@ -27,7 +27,7 @@ public:
 		shuffle(nodes.begin(), nodes.end(), eng);
 
 		unordered_map<int, GsopNode> nodesmap;
-		simulationData.aOnly = true;
+		simulationData.aOnly = false;
 
 		for(int i = 0; i < nodes.size(); i++){
 			double abrate = 0.5;
@@ -52,7 +52,7 @@ public:
 				uniform_int_distribution<> distr_search(1, simulationData.searchTime);
 				int sTime = distr_search(eng);
 				nodes[i].searchTime = sTime;
-			} /*else{
+			} else{
 				nodes[i].type = 'B';
 				nodes[i].coeff = 1.0;
 				if(simulationData.bEph){
@@ -66,7 +66,7 @@ public:
 				}else{
 					nodes[i].eph = NULL;
 				}
-			}*/
+			}
 			nodesmap.insert(pair<int,GsopNode>(nodes[i].id,nodes[i]));
 		}
 
@@ -109,12 +109,12 @@ public:
 			simulationResults.typeAPopHistory.push_back(typeACount);
 			simulationResults.typeBPopHistory.push_back(typeBCount);
 
-/*
+
 			if(typeACount == 0 || typeBCount == 0){
 				simulationResults.fixationCycles = i;
 				break;
 			}
-*/
+
 
 
 		}
