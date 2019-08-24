@@ -28,43 +28,76 @@ public:
 
 		unordered_map<int, GsopNode> nodesmap;
 		simulationData.aOnly = false;
+		simulationData.bEph = true;
 
 		for(int i = 0; i < nodes.size(); i++){
+
 			double abrate = 0.5;
 			if(simulationData.aOnly){
 				abrate = 1;
 			}
+
 			if(i < simulationData.initialPop*abrate){
 				nodes[i].type = 'A';
 				nodes[i].coeff = 1.0;
-				if (i < simulationData.initialPop * abrate * simulationData.ephStartRatio) {
+				int aEphIndex = simulationData.initialPop * abrate * simulationData.ephStartRatio;
+				//separates state using from producing
+				int aEphIndexHalf = simulationData.initialPop * abrate * simulationData.ephStartRatio *0.5;
+
+				if (i < aEphIndex) {
 					Eph *e = new Eph(simulationData.ephBonus);
 					//randomize eph time
-					uniform_int_distribution<> distr_eph(1, simulationData.ephBonus);
+
+					uniform_int_distribution<> distr_eph(1, simulationData.ephTime);
+					cout<<"aqui\n";
 					int eTime = distr_eph(eng);
+					cout<<"aqui2\n";
 					e->time = eTime;
+
 					nodes[i].eph = e;
+					nodes[i].behavior = USING;
 				}else{
 					nodes[i].eph = NULL;
+					nodes[i].behavior = SEARCHING;
 				}
 
-				//randomize search time
-				uniform_int_distribution<> distr_behavior(1, simulationData.behaviorTime);
-				int sTime = distr_behavior(eng);
-				nodes[i].behaviorTimer = sTime;
+				if(nodes[i].behavior != USING){
+					//randomize behavior time
+					uniform_int_distribution<> distr_behavior(1, simulationData.behaviorTime);
+					int sTime = distr_behavior(eng);
+					nodes[i].behaviorTimer = sTime;
+				}else{
+					nodes[i].behaviorTimer = 0;
+				}
 			} else{
 				nodes[i].type = 'B';
 				nodes[i].coeff = 1.0;
-				if(simulationData.bEph){
-					if (i < (simulationData.initialPop * abrate * simulationData.ephStartRatio)+(simulationData.initialPop * abrate) ) {
-						Eph *e = new Eph(simulationData.ephBonus);
-						e->time = simulationData.ephTime;
-						nodes[i].eph = e;
-					}else{
-						nodes[i].eph = NULL;
-					}
+				int bEphIndex = (simulationData.initialPop * abrate * simulationData.ephStartRatio)+(simulationData.initialPop * abrate);
+				//separates state using from producing
+				int bEphIndexHalf = (simulationData.initialPop * abrate * simulationData.ephStartRatio * 0.5)+(simulationData.initialPop * abrate);
+
+
+				if (i < bEphIndex ) {
+					Eph *e = new Eph(simulationData.ephBonus);
+					//randomize eph time
+					uniform_int_distribution<> distr_eph(1, simulationData.ephTime);
+					int eTime = distr_eph(eng);
+					e->time = eTime;
+					nodes[i].eph = e;
+					nodes[i].behavior = USING;
 				}else{
+
 					nodes[i].eph = NULL;
+					nodes[i].behavior = SEARCHING;
+				}
+
+				if(nodes[i].behavior != USING){
+					//randomize behavior time
+					uniform_int_distribution<> distr_behavior(1, simulationData.behaviorTime);
+					int sTime = distr_behavior(eng);
+					nodes[i].behaviorTimer = sTime;
+				}else {
+					nodes[i].behaviorTimer = 0;
 				}
 			}
 			nodesmap.insert(pair<int,GsopNode>(nodes[i].id,nodes[i]));

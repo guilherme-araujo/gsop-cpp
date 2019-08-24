@@ -23,7 +23,7 @@ class GsopNode{
     int fitness;
     Eph *eph;
     int behaviorTimer;
-    NodeState behaviour;
+    NodeState behavior;
 
     vector<int> neighbors;
 

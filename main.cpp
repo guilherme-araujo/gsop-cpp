@@ -33,7 +33,7 @@ int main(int argc, char* argv[]){
 	double reuseBonusMultiplierA = 0.3;
 	double reuseBonusMultiplierB = 0.9;
 	double buildingBonusA = 0.9;
-	double buildingBonusB = 0.96
+	double buildingBonusB = 0.96;
 
 	//Simulation values parsing from argv
 	string arg_samples = "samples";
