@@ -177,7 +177,7 @@ class SimulationCycles{
 			int keyi = keys[i];
 			GsopNode *n = &(*nodes)[keyi];
 
-			switch(n->behavior){
+			/*switch(n->behavior){
 				case SEARCHING:
 					csearching++;
 					break;
@@ -192,7 +192,7 @@ class SimulationCycles{
 					cusingshared++;
 					if(n->eph != NULL) cephshared++;
 					break;
-			}
+			}*/
 
 			if(n->behaviorTimer == 1){
 				//cout<<"time "<<n->behavior<<endl;
@@ -211,9 +211,9 @@ class SimulationCycles{
 				n->behaviorTimer -= 1;
 			}
 		}
-		cout<<"SEARCHING "<<csearching<<" PRODUCING "<<cproducing<<" USING "<<
-			cusing<<" "<<ceph<<" ephs "<<" USING_SHARED "<<cusingshared<<" "
-			<<cephshared<<" ephs"<<endl;
+		//cout<<"SEARCHING "<<csearching<<" PRODUCING "<<cproducing<<" USING "<<
+		//	cusing<<" "<<ceph<<" ephs "<<" USING_SHARED "<<cusingshared<<" "
+		//	<<cephshared<<" ephs"<<endl;
 
 
 
