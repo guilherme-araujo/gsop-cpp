@@ -15,16 +15,21 @@ class SimulationCycles{
 
 	public:
 
-
 		static void cycleV8(unordered_map<int,GsopNode> *nodes, SimulationData simulationData, mt19937 *eng){
-
-		//Sortear mortes
 
 		//Sortear nascimentos
 		int dieCount = (int) ((double) nodes->size() * (simulationData.deathRate-1) );
+
+		//make sure there is at least one death
 		if(dieCount==0) dieCount++;
+
+		//vector of selected keys
 		vector<int> selectedKeys;
+
+		//vector of selected keys for death in case of neighborhood inheritance
 		vector<int> selectedKeysDeath;
+
+		//all nodes key vector
 		vector<int> keys;
 		keys.resize(nodes->size());
 		for(int i = 0; i < nodes->size(); i++){
@@ -37,40 +42,35 @@ class SimulationCycles{
 			selectedKeys.push_back(keys[i]);
 		}
 
-		//deaths in case of neighborhood inheritance
-		if (simulationData.neighborhoodInheritance) {
-			for (int i = dieCount; i < dieCount*2; i++) {
-				selectedKeysDeath.push_back(keys[i]);
-			}
-		}
-
-
-
 		//births
+		//keyi: current selected key index for death/birth
 		for(int keyi = 0; keyi < selectedKeys.size(); keyi++){
+
+			//key: current selected key
 			int key = selectedKeys[keyi];
+
+			//*n: current selected node
 			GsopNode *n = &(*nodes)[key];
+
+			//selected type. saving for reuse of eph only by same type
+			char selectedType = n->type;
 
 			vector<int> roleta;
 			vector<int> neighborsList = n->neighbors;
 
-			//neighborsList.insert(key);
-
-
 			for(int i = 0; i < neighborsList.size(); i++){
 				GsopNode neighbor = (*nodes)[neighborsList[i]];
 
-				int qtd = (int) (neighbor.getCoeff()*100);
+				//adjusted roulette amounts by node state
+				int qtd = (int) (neighbor.getCoeffV8(simulationData)*100);
 				for(int j = 0; j < qtd; j++){
 					roleta.push_back(neighbor.id);
 				}
 			}
 
-
 			Eph *eph = NULL;
-
-
 			GsopNode *sorteado;
+
 			if(roleta.size()==0){
 				sorteado = &(*nodes)[key];
 			}else{
@@ -87,7 +87,9 @@ class SimulationCycles{
 				n->coeff = sorteado->coeff;
 				n->type = sorteado->type;
 				n->fitness = 0;
-				if(simulationData.bEph ||  n->type=='A'){
+
+				//this section was commented out since there is no eph generation at birth
+				/*if(simulationData.bEph ||  n->type=='A'){
 
 					uniform_int_distribution<> distr(0, 99);
 					int sorteioGeracao = distr(*eng);
@@ -97,78 +99,27 @@ class SimulationCycles{
 						e->time = simulationData.ephTime;
 						n->eph = e;
 					}
-				}
+				}*/
+
 			}else{
 
-				GsopNode *dyingNode = &(*nodes)[selectedKeysDeath[0]];
-
-				int selectedId = dyingNode->id;
-				eph = dyingNode->eph;
-
-				//remove dying node from neighbors' neighborhoods
-				for(int i = 0; i < dyingNode->neighbors.size(); i++){
-					GsopNode *neighbor = &(*nodes)[dyingNode->neighbors[i]];
-
-					vector<int> updatedNList;
-
-					if(neighbor->id!=dyingNode->id){
-
-						vector<int>::iterator it = find(neighbor->neighbors.begin(), neighbor->neighbors.end(), selectedId);
-						neighbor->neighbors.erase(it);
-					}
-				}
-
-				selectedKeysDeath.erase(selectedKeysDeath.begin());
-				//generating new node
-				GsopNode newNode;
-				newNode.id = selectedId;
-				newNode.coeff = sorteado->coeff;
-				newNode.type = sorteado->type;
-				newNode.fitness = 0;
-				//new node neighborhood list
-				vector<int> newNeighbors = sorteado->neighbors;
-
-				nodes->erase(selectedId);
+			} //end of neighborhood inheritance else
 
 
-				newNode.neighbors = newNeighbors;
-
-				if(simulationData.bEph || newNode.type == 'A'){
-
-					uniform_int_distribution<> distr(0, 99);
-					int sorteioGeracao = distr(*eng);
-
-					if (sorteioGeracao < (simulationData.ephBirthGenerationChance * 100)) {
-						Eph *e = new Eph(simulationData.ephBonus);
-						e->time = simulationData.ephTime;
-						newNode.eph = e;
-					}
-				}
-
-				for(int i = 0 ;i < newNode.neighbors.size(); i++){
-					unordered_map<int,GsopNode>::iterator it = (*nodes).find(newNode.neighbors[i]);
-					if(it != (*nodes).end()){
-
-						it->second.neighbors.push_back(selectedId);
-					}
-				}
-
-				nodes->insert(pair<int,GsopNode>(selectedId,newNode));
-
-			}
-
+			//eph reuse section. ephs can be used by types A and B interchangeably
 			vector<int> currentKeys;
 			for(int i = 0; i < neighborsList.size(); i++){
 				currentKeys.push_back(neighborsList[i]);
 			}
 
-
 			shuffle(currentKeys.begin(), currentKeys.end(), *eng);
 			bool pegou = false;
 			for(int i = 0; i < currentKeys.size(); i++){
 				int ckey = currentKeys[i];
-				if((*nodes)[ckey].eph ==NULL && (*nodes)[ckey].type =='A'){
+				if((*nodes)[ckey].behavior == SEARCHING){
 					(*nodes)[ckey].eph = eph;
+					(*nodes)[ckey].behavior = USING_SHARED;
+					(*nodes)[ckey].behaviorTimer = 0;
 					pegou = true;
 					break;
 				}
@@ -181,8 +132,10 @@ class SimulationCycles{
 				shuffle(currentKeys.begin(), currentKeys.end(), *eng);
 				for(int i = 0; i < currentKeys.size(); i++){
 					int ckey = currentKeys[i];
-					if((*nodes)[ckey].eph ==NULL && (*nodes)[ckey].type =='A'){
+					if((*nodes)[ckey].behavior == SEARCHING){
 						(*nodes)[ckey].eph = eph;
+						(*nodes)[ckey].behavior = USING_SHARED;
+						(*nodes)[ckey].behaviorTimer = 0;
 						pegou = true;
 						break;
 					}
@@ -190,10 +143,11 @@ class SimulationCycles{
 			}
 
 			if(!pegou) delete eph;
-
+			//end of eph reuse section
 		}
 
 
+		//eph times update
 		for(int i = 0; i < keys.size(); i++){
 			int keyi = keys[i];
 			GsopNode *n = &(*nodes)[keyi];
@@ -201,9 +155,33 @@ class SimulationCycles{
 				if(n->eph->time == 1){
 					delete n->eph;
 					n->eph = NULL;
+					n->behavior = SEARCHING;
+					n->behaviorTimer = simulationData.ephTime;
 				}else{
 					n->eph->time -= 1;
 				}
+			}
+		}
+
+		//behavior update
+		for(int i = 0; i < keys.size(); i++){
+			int keyi = keys[i];
+			GsopNode *n = &(*nodes)[keyi];
+			if(n->behaviorTimer == 1){
+				//cout<<"time "<<n->behavior<<endl;
+				if(n->behavior == SEARCHING){
+					n->behavior = PRODUCING;
+					n->behaviorTimer = simulationData.ephTime;
+				}else if(n->behavior == PRODUCING){
+					//cout<<"gerou\n";
+					n->behavior = USING;
+					Eph *e = new Eph(simulationData.ephBonus);
+					e->time = simulationData.ephTime;
+					n->eph = e;
+					n->behaviorTimer = 0;
+				}
+			}else if(n->behaviorTimer > 1){
+				n->behaviorTimer -= 1;
 			}
 		}
 

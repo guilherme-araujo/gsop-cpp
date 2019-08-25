@@ -1,10 +1,12 @@
+#pragma once
+
 #include <vector>
 //#include "GsopNode.cpp"
 
 class SimulationResults{
-	
+
 	public:
-	
+
 	vector<int> typeAPopHistory;
 	vector<int> typeBPopHistory;
 	vector<int> ephPopHistory;
@@ -17,6 +19,6 @@ class SimulationResults{
 	double avgCoeff;
 	double avgFitness;
 	int fixationCycles;
-	
-	
+
+
 };

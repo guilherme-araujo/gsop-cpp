@@ -1,5 +1,10 @@
+#pragma once
+
 #include <vector>
 #include <string>
+#include "../model/Graph.cpp"
+
+class GsopGraph;
 
 class SimulationData{
 

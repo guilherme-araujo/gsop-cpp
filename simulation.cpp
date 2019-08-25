@@ -8,25 +8,12 @@
 mutex out;
 #include "simulationRun.cpp"
 
-
-
-
-
 class Simulation{
 
 	public:
 
 		static vector<SimulationResults> simResults;
 
-		/*static void simulationV6(int num){
-
-			for(int i = 0; i < 100000000; i++) continue;
-			out.lock();
-			cout<<"thread "<<num<<endl;
-			out.unlock();
-		}*/
-
-		//Apenas tipo A e aplicação da formula
 		static bool simulationV8(SimulationData simulationData, int ti){
 
 			SimulationResults simulationResults = SimulationRun::runSimV8(simulationData, ti);
@@ -43,7 +30,7 @@ class Simulation{
 				//cout<<"fc "<<fc<<endl;
 				int numCycles = simulationResults.typeAPopHistory.size()-1;
 				//if(fc==-1) fc = simulationResults.typeAPopHistory.size()-1;
-				cout<<simulationResults.typeAPopHistory[numCycles]<<";"<<simulationResults.typeBPopHistory[numCycles]<<";"<<fc<<";"<<simulationResults.elapsedSeconds<<";"<<simulationData.sampleid<<endl;
+				cout<<simulationResults.typeAPopHistory[numCycles]<<";"<<simulationResults.typeBPopHistory[numCycles]<<";"<<fc<<";"<<simulationResults.elapsedSeconds<<";"<<simulationData.sampleid<<";"<<simulationResults.typeAWithEph<<";"<<simulationResults.typeBWithEph<<endl;
 			}
 
 			out.unlock();
@@ -67,7 +54,7 @@ class Simulation{
 				//cout<<"fc "<<fc<<endl;
 				int numCycles = simulationResults.typeAPopHistory.size()-1;
 				//if(fc==-1) fc = simulationResults.typeAPopHistory.size()-1;
-				
+
 				cout<<simulationResults.typeAPopHistory[numCycles]<<";"<<simulationResults.typeBPopHistory[numCycles]<<";"<<fc<<";"<<simulationResults.elapsedSeconds<<";"<<simulationData.sampleid<<";"<<simulationResults.typeAWithEph<<";"<<simulationResults.typeBWithEph<<endl;
 			}
 

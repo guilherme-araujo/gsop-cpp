@@ -12,6 +12,7 @@ class SimulationRun{
 public:
 
 	static SimulationResults runSimV8(SimulationData simulationData, int ti){
+
 		SimulationResults simulationResults;
 
 		simulationResults.fixationCycles = -1;
@@ -29,6 +30,7 @@ public:
 		unordered_map<int, GsopNode> nodesmap;
 		simulationData.aOnly = false;
 		simulationData.bEph = true;
+		simulationData.neighborhoodInheritance = false; //V8 simulations are always without neighborhood inheritance
 
 		for(int i = 0; i < nodes.size(); i++){
 
@@ -38,6 +40,7 @@ public:
 			}
 
 			if(i < simulationData.initialPop*abrate){
+				//Type A initialization
 				nodes[i].type = 'A';
 				nodes[i].coeff = 1.0;
 				int aEphIndex = simulationData.initialPop * abrate * simulationData.ephStartRatio;
@@ -45,17 +48,20 @@ public:
 				int aEphIndexHalf = simulationData.initialPop * abrate * simulationData.ephStartRatio *0.5;
 
 				if (i < aEphIndex) {
-					Eph *e = new Eph(simulationData.ephBonus);
-					//randomize eph time
+					if(i < aEphIndexHalf){
+						Eph *e = new Eph(simulationData.ephBonus);
 
-					uniform_int_distribution<> distr_eph(1, simulationData.ephTime);
-					cout<<"aqui\n";
-					int eTime = distr_eph(eng);
-					cout<<"aqui2\n";
-					e->time = eTime;
+						//randomize eph time
+						uniform_int_distribution<> distr_eph(1, simulationData.ephTime);
+						int eTime = distr_eph(eng);
+						e->time = eTime;
 
-					nodes[i].eph = e;
-					nodes[i].behavior = USING;
+						nodes[i].eph = e;
+						nodes[i].behavior = USING;
+					}else{
+						nodes[i].eph = NULL;
+						nodes[i].behavior = PRODUCING;
+					}
 				}else{
 					nodes[i].eph = NULL;
 					nodes[i].behavior = SEARCHING;
@@ -70,23 +76,28 @@ public:
 					nodes[i].behaviorTimer = 0;
 				}
 			} else{
+				//Type B initialization
 				nodes[i].type = 'B';
 				nodes[i].coeff = 1.0;
 				int bEphIndex = (simulationData.initialPop * abrate * simulationData.ephStartRatio)+(simulationData.initialPop * abrate);
 				//separates state using from producing
 				int bEphIndexHalf = (simulationData.initialPop * abrate * simulationData.ephStartRatio * 0.5)+(simulationData.initialPop * abrate);
 
-
 				if (i < bEphIndex ) {
-					Eph *e = new Eph(simulationData.ephBonus);
-					//randomize eph time
-					uniform_int_distribution<> distr_eph(1, simulationData.ephTime);
-					int eTime = distr_eph(eng);
-					e->time = eTime;
-					nodes[i].eph = e;
-					nodes[i].behavior = USING;
-				}else{
+					if(i < bEphIndexHalf){
+						Eph *e = new Eph(simulationData.ephBonus);
 
+						//randomize eph time
+						uniform_int_distribution<> distr_eph(1, simulationData.ephTime);
+						int eTime = distr_eph(eng);
+						e->time = eTime;
+						nodes[i].eph = e;
+						nodes[i].behavior = USING;
+					} else{
+						nodes[i].eph = NULL;
+						nodes[i].behavior = PRODUCING;
+					}
+				} else{
 					nodes[i].eph = NULL;
 					nodes[i].behavior = SEARCHING;
 				}
@@ -103,7 +114,6 @@ public:
 			nodesmap.insert(pair<int,GsopNode>(nodes[i].id,nodes[i]));
 		}
 
-
 		for(int i = 0; i < nodes.size(); i++){
 			for(int j = 0; j < nodes[i].neighbors.size(); j++){
 				nodesmap[nodes[i].neighbors[j]].neighbors.push_back(nodes[i].id);
@@ -112,9 +122,8 @@ public:
 
 		clock_t begin = clock();
 
-
-
 		for(int i = 0; i < simulationData.cycles; i++){
+			//cout<<"cycle "<<i<<endl;
 			SimulationCycles::cycleV8(&nodesmap, simulationData, &eng);
 
 			int ephCount = 0;
@@ -142,20 +151,31 @@ public:
 			simulationResults.typeAPopHistory.push_back(typeACount);
 			simulationResults.typeBPopHistory.push_back(typeBCount);
 
-
 			if(typeACount == 0 || typeBCount == 0){
 				simulationResults.fixationCycles = i;
 				break;
 			}
 
-
-
 		}
 
+		int typeACount = 0;
+		int typeBCount = 0;
+
+		for(unordered_map<int, GsopNode>::iterator j = nodesmap.begin(); j != nodesmap.end(); ++j){
+			if(j->second.eph != NULL){
+				if(j->second.type == 'A'){
+					typeACount++;
+				}else{
+					typeBCount++;
+				}
+			}
+		}
+
+		simulationResults.typeAWithEph = typeACount;
+		simulationResults.typeBWithEph = typeBCount;
+
 		clock_t end = clock();
-
 		double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
-
 		simulationResults.elapsedSeconds = elapsed_secs;
 
 		return simulationResults;
@@ -250,17 +270,12 @@ public:
 			simulationResults.typeAPopHistory.push_back(typeACount);
 			simulationResults.typeBPopHistory.push_back(typeBCount);
 
-
 			if(typeACount == 0 || typeBCount == 0){
 				simulationResults.fixationCycles = i;
 				break;
 			}
 
-
-
 		}
-
-
 		int typeACount = 0;
 		int typeBCount = 0;
 

@@ -1,6 +1,9 @@
+#pragma once
+
 #include <string>
 #include <set>
 #include "Eph.cpp"
+#include "SimulationData.cpp"
 
 using namespace std;
 
@@ -34,6 +37,29 @@ class GsopNode{
 
   double getCoeff(){
     return this->coeff+this->getBonus();
+  }
+
+  double getCoeffV8(SimulationData sd){
+    double stateCoeff = this->coeff;
+    double adjustedBonus = this->getBonus();
+
+    if(this->behavior == PRODUCING){
+      if(this->type == 'A'){
+        stateCoeff = sd.buildingBonusA;
+      } else{
+        stateCoeff = sd.buildingBonusB;
+      }
+    }
+
+    if(this->behavior == USING_SHARED){
+      if(this->type == 'A'){
+        adjustedBonus = adjustedBonus * sd.reuseBonusMultiplierA;
+      } else{
+        adjustedBonus = adjustedBonus * sd.reuseBonusMultiplierB;
+      }
+    }
+
+    return stateCoeff + adjustedBonus;
   }
 
 	double getBonus(){
