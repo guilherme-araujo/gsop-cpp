@@ -83,13 +83,13 @@ int main(int argc, char* argv[]){
 		}else if (arg_behaviorTime.compare(argv[i])==0){
 			behaviorTime = stoi(argv[i+1]);
 		}else if (arg_reuseBonusMultiplierA.compare(argv[i])==0){
-			reuseBonusMultiplierA = stoi(argv[i+1]);
+			reuseBonusMultiplierA = stod(argv[i+1]);
 		}else if (arg_reuseBonusMultiplierB.compare(argv[i])==0){
-			reuseBonusMultiplierB = stoi(argv[i+1]);
+			reuseBonusMultiplierB = stod(argv[i+1]);
 		}else if (arg_buildingBonusA.compare(argv[i])==0){
-			buildingBonusA = stoi(argv[i+1]);
+			buildingBonusA = stod(argv[i+1]);
 		}else if (arg_buildingBonusB.compare(argv[i])==0){
-			buildingBonusB = stoi(argv[i+1]);
+			buildingBonusB = stod(argv[i+1]);
 		}else{
 			cout<<"Wrong option "<<argv[i]<<endl;
 		}
