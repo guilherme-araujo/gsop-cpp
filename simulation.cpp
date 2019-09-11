@@ -16,6 +16,11 @@ class Simulation{
 
 		static bool simulationV8(SimulationData simulationData, int ti){
 
+			simulationData.isAReuser = !(simulationData.reuseBonusMultiplierA == 0.0);
+			simulationData.isBReuser = !(simulationData.reuseBonusMultiplierB == 0.0);
+			simulationData.isAProducer = !(simulationData.buildingBonusA == 0.0);
+			simulationData.isBProducer = !(simulationData.buildingBonusB == 0.0);
+
 			SimulationResults simulationResults = SimulationRun::runSimV8(simulationData, ti);
 
 			out.lock();

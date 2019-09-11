@@ -47,7 +47,7 @@ public:
 				//separates state using from producing
 				int aEphIndexHalf = simulationData.initialPop * abrate * simulationData.ephStartRatio *0.5;
 
-				if (i < aEphIndex) {
+				if ((i < aEphIndex) && simulationData.isAProducer) {
 					if(i < aEphIndexHalf){
 						Eph *e = new Eph(simulationData.ephBonus);
 
@@ -83,7 +83,7 @@ public:
 				//separates state using from producing
 				int bEphIndexHalf = (simulationData.initialPop * abrate * simulationData.ephStartRatio * 0.5)+(simulationData.initialPop * abrate);
 
-				if (i < bEphIndex ) {
+				if (i < bEphIndex && simulationData.isBProducer) {
 					if(i < bEphIndexHalf){
 						Eph *e = new Eph(simulationData.ephBonus);
 
