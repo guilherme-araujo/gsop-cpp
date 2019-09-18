@@ -35,6 +35,7 @@ int main(int argc, char* argv[]){
 	double reuseBonusMultiplierB = 0.9;
 	double buildingBonusA = 0.99;
 	double buildingBonusB = 0.93;
+	bool printPartials = false;
 
 	//Simulation values parsing from argv
 	string arg_samples = "samples";
@@ -54,6 +55,7 @@ int main(int argc, char* argv[]){
 	string arg_reuseBonusMultiplierB = "rBMB";
 	string arg_buildingBonusA = "bBA";
 	string arg_buildingBonusB = "bBB";
+	string arg_printPartials = "printPartials";
 
 	for(int i = 1; i < argc; i+=2){
 		if(arg_samples.compare(argv[i])==0){
@@ -90,6 +92,8 @@ int main(int argc, char* argv[]){
 			buildingBonusA = stod(argv[i+1]);
 		}else if (arg_buildingBonusB.compare(argv[i])==0){
 			buildingBonusB = stod(argv[i+1]);
+		}else if (arg_printPartials.compare(argv[i])==0){
+			printPartials = stoi(argv[i+1]);
 		}else{
 			cout<<"Wrong option "<<argv[i]<<endl;
 		}
@@ -135,6 +139,7 @@ int main(int argc, char* argv[]){
 	simulationData.reuseBonusMultiplierB = reuseBonusMultiplierB;
 	simulationData.buildingBonusA = buildingBonusA;
 	simulationData.buildingBonusB = buildingBonusB;
+	simulationData.printPartials = printPartials;
 
 	//Launch simulation threads according to number of samples
 	vector<thread> tl;

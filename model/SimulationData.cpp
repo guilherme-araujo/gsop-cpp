@@ -35,6 +35,7 @@ class SimulationData{
 	//'b' : barabasi-albert. 'e' : erdos-renyi. 'c' : complete. 'r' : regular;
 	char graphType;
 	bool bEph;
+	bool printPartials;
 
 	int sampleid;
 	vector<string> nodeDetail;

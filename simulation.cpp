@@ -31,6 +31,13 @@ class Simulation{
 					cout<<i<<";"<<simulationResults.typeAPopHistory[i]<<";"<<simulationResults.typeBPopHistory[i]<<";"<<simulationResults.ephPopHistory[i]<<";"<<simulationResults.avgDegree[i]<<endl;
 				}
 			}else{
+
+				if(simulationData.printPartials){
+					for(int i = 500; i <= simulationResults.typeAPopHistory.size(); i+=500){
+						cout<<"partial;"<<i<<";"<<simulationResults.typeAPopHistory[i-1]<<";"<<simulationResults.typeBPopHistory[i-1]<<";"<<simulationResults.ephPopHistory[i-1]<<";"<<simulationData.sampleid<<endl;
+					}
+				}
+
 				int fc = simulationResults.fixationCycles;
 				//cout<<"fc "<<fc<<endl;
 				int numCycles = simulationResults.typeAPopHistory.size()-1;
