@@ -111,7 +111,17 @@ class SimulationCycles{
 			if(eph != NULL){
 				vector<int> currentKeys;
 				for(int i = 0; i < neighborsList.size(); i++){
-					currentKeys.push_back(neighborsList[i]);
+					GsopNode neighbor = (*nodes)[neighborsList[i]];
+					if(neighbor.type=='A'){
+						if(simulationData.isAReuser){
+							currentKeys.push_back(neighborsList[i]);
+						}
+					}else if(neighbor.type=='B'){
+						if(simulationData.isBReuser){
+							currentKeys.push_back(neighborsList[i]);
+						}
+					}
+
 				}
 
 				shuffle(currentKeys.begin(), currentKeys.end(), *eng);
@@ -130,8 +140,22 @@ class SimulationCycles{
 				if(!pegou){
 					currentKeys.clear();
 
-					currentKeys = keys;
-					shuffle(currentKeys.begin(), currentKeys.end(), *eng);
+					//currentKeys = keys;
+					for(int i = 0; i < keys.size(); i++){
+						int ckey = keys[i];
+						if((*nodes)[ckey].type == 'A'){
+							if(simulationData.isAReuser){
+								currentKeys.push_back(keys[i]);
+							}
+						}else if((*nodes)[ckey].type == 'B'){
+							if(simulationData.isBReuser){
+								currentKeys.push_back(keys[i]);
+							}
+						}
+					}
+
+					if(currentKeys.size() > 0) shuffle(currentKeys.begin(), currentKeys.end(), *eng);
+
 					for(int i = 0; i < currentKeys.size(); i++){
 						int ckey = currentKeys[i];
 						if((*nodes)[ckey].behavior == SEARCHING){
@@ -166,10 +190,14 @@ class SimulationCycles{
 			}
 		}
 
-		int csearching = 0;
-		int cproducing = 0;
-		int cusing = 0;
-		int cusingshared = 0;
+		int csearchingA = 0;
+		int cproducingA = 0;
+		int cusingA = 0;
+		int cusingsharedA = 0;
+		int csearchingB = 0;
+		int cproducingB = 0;
+		int cusingB = 0;
+		int cusingsharedB = 0;
 		int ceph = 0;
 		int cephshared = 0;
 		//behavior update
@@ -177,28 +205,48 @@ class SimulationCycles{
 			int keyi = keys[i];
 			GsopNode *n = &(*nodes)[keyi];
 
-			/*switch(n->behavior){
-				case SEARCHING:
-					csearching++;
-					break;
-				case PRODUCING:
-					cproducing++;
-					break;
-				case USING:
-					cusing++;
-					if(n->eph != NULL) ceph++;
-					break;
-				case USING_SHARED:
-					cusingshared++;
-					if(n->eph != NULL) cephshared++;
-					break;
-			}*/
+			if(simulationData.ephPopHistory){
+				switch(n->behavior){
+					case SEARCHING:
+						if(n->type=='A')
+							csearchingA++;
+						else csearchingB++;
+						break;
+					case PRODUCING:
+						if(n->type=='A')
+							cproducingA++;
+						else cproducingB++;
+						break;
+					case USING:
+						if(n->type=='A')
+							cusingA++;
+						else cusingB++;
+						if(n->eph != NULL) ceph++;
+						break;
+					case USING_SHARED:
+						if(n->type=='A')
+							cusingsharedA++;
+						else cusingsharedB++;
+						if(n->eph != NULL) cephshared++;
+						break;
+				}
+			}
 
 			if(n->behaviorTimer == 1){
 				//cout<<"time "<<n->behavior<<endl;
 				if(n->behavior == SEARCHING){
-					n->behavior = PRODUCING;
-					n->behaviorTimer = simulationData.ephTime;
+					if(n->type=='A'){
+						if(simulationData.isAProducer){
+							n->behavior = PRODUCING;
+							n->behaviorTimer = simulationData.ephTime;
+						}
+					}else if(n->type=='B'){
+						if(simulationData.isBProducer){
+							n->behavior = PRODUCING;
+							n->behaviorTimer = simulationData.ephTime;
+						}
+					}
+
 				}else if(n->behavior == PRODUCING){
 					//cout<<"gerou\n";
 					n->behavior = USING;
@@ -211,9 +259,12 @@ class SimulationCycles{
 				n->behaviorTimer -= 1;
 			}
 		}
-		//cout<<"SEARCHING "<<csearching<<" PRODUCING "<<cproducing<<" USING "<<
-		//	cusing<<" "<<ceph<<" ephs "<<" USING_SHARED "<<cusingshared<<" "
-		//	<<cephshared<<" ephs"<<endl;
+		if(simulationData.ephPopHistory){
+			cout<<"SEARCHING "<<csearchingA<<"/"<<csearchingB<<" PRODUCING "<<cproducingA<<"/"<<cproducingB<<" USING "<<
+				cusingA<<"/"<<cusingB<<" "<<ceph<<" ephs "<<" USING_SHARED "<<cusingsharedA<<"/"<<cusingsharedB<<" "
+				<<cephshared<<" ephs"<<endl;
+		}
+
 
 
 
