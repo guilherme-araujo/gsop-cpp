@@ -15,6 +15,7 @@ public:
 
 		SimulationResults simulationResults;
 
+		simulationResults.behaviorHistoryStr = "";
 		simulationResults.fixationCycles = -1;
 
 		vector<GsopNode> nodes = simulationData.g->nodes;
@@ -124,7 +125,8 @@ public:
 
 		for(int i = 0; i < simulationData.cycles; i++){
 			//cout<<"cycle "<<i<<endl;
-			SimulationCycles::cycleV8(&nodesmap, simulationData, &eng);
+			string behaviorSnapshot;
+			SimulationCycles::cycleV8(&nodesmap, simulationData, &eng, &behaviorSnapshot);
 
 			int ephCount = 0;
 			int typeACount = 0;
@@ -146,6 +148,12 @@ public:
 
 			}
 
+			if(simulationData.behaviorHistory){
+				simulationResults.behaviorHistoryStr += "bhistory;"+to_string(simulationData.sampleid)+
+				';'+to_string(i)+';'+behaviorSnapshot;
+
+			}
+
 			simulationResults.avgDegree.push_back(degreeCount/nodes.size());
 			simulationResults.ephPopHistory.push_back(ephCount);
 			simulationResults.typeAPopHistory.push_back(typeACount);
@@ -155,6 +163,8 @@ public:
 				simulationResults.fixationCycles = i;
 				break;
 			}
+
+			
 
 		}
 

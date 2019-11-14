@@ -15,7 +15,7 @@ class SimulationCycles{
 
 	public:
 
-		static void cycleV8(unordered_map<int,GsopNode> *nodes, SimulationData simulationData, mt19937 *eng){
+		static void cycleV8(unordered_map<int,GsopNode> *nodes, SimulationData simulationData, mt19937 *eng, string *behaviorSnapshot){
 
 		//Sortear nascimentos
 		int dieCount = (int) ((double) nodes->size() * (simulationData.deathRate-1) );
@@ -205,7 +205,7 @@ class SimulationCycles{
 			int keyi = keys[i];
 			GsopNode *n = &(*nodes)[keyi];
 
-			if(simulationData.ephPopHistory){
+			if(simulationData.behaviorHistory){
 				switch(n->behavior){
 					case SEARCHING:
 						if(n->type=='A')
@@ -259,10 +259,14 @@ class SimulationCycles{
 				n->behaviorTimer -= 1;
 			}
 		}
-		if(simulationData.ephPopHistory){
-			cout<<"SEARCHING "<<csearchingA<<"/"<<csearchingB<<" PRODUCING "<<cproducingA<<"/"<<cproducingB<<" USING "<<
-				cusingA<<"/"<<cusingB<<" "<<ceph<<" ephs "<<" USING_SHARED "<<cusingsharedA<<"/"<<cusingsharedB<<" "
-				<<cephshared<<" ephs"<<endl;
+
+		if(simulationData.behaviorHistory){
+			*behaviorSnapshot = to_string(csearchingA)+';'+to_string(csearchingB)+';'+to_string(cproducingA)+';'+
+			to_string(cproducingB)+';'+to_string(cusingA)+';'+to_string(cusingB)+';'+to_string(cusingsharedA)+';'+
+			to_string(cusingsharedB)+";\n";
+			//cout<<"SEARCHING "<<csearchingA<<"/"<<csearchingB<<" PRODUCING "<<cproducingA<<"/"<<cproducingB<<" USING "<<
+			//	cusingA<<"/"<<cusingB<<" "<<ceph<<" ephs "<<" USING_SHARED "<<cusingsharedA<<"/"<<cusingsharedB<<" "
+			//	<<cephshared<<" ephs"<<endl;
 		}
 
 

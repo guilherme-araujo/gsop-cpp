@@ -22,6 +22,7 @@ class SimulationData{
 	bool neighborhoodInheritance;
 	bool aOnly;
 	bool ephPopHistory;
+	bool behaviorHistory;
 	int ephTime;
 	int behaviorTime;
 	double reuseBonusMultiplierA;

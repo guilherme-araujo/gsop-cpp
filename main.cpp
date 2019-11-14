@@ -25,6 +25,7 @@ int main(int argc, char* argv[]){
 	int threads = 1;
 	double ephStartRatio = 0.5;
 	bool ephPopHistory = false;
+	bool behaviorHistory = false;
 	int ephTime = 30;
 	bool ni = false;
 	int sampleid = 0;
@@ -45,6 +46,7 @@ int main(int argc, char* argv[]){
 	string arg_threads = "threads";
 	string arg_ephStartRatio = "ephStartRatio";
 	string arg_ephPopHistory = "ephPopHistory";
+	string arg_behaviorHistory = "behaviorHistory";
 	string arg_ephTime = "ephTime";
 	string arg_ni = "ni";
 	string arg_sampleid = "sampleId";
@@ -94,6 +96,8 @@ int main(int argc, char* argv[]){
 			buildingBonusB = stod(argv[i+1]);
 		}else if (arg_printPartials.compare(argv[i])==0){
 			printPartials = stoi(argv[i+1]);
+		}else if (arg_behaviorHistory.compare(argv[i])==0){
+			behaviorHistory = stoi(argv[i+1]);
 		}else{
 			cout<<"Wrong option "<<argv[i]<<endl;
 		}
@@ -140,6 +144,7 @@ int main(int argc, char* argv[]){
 	simulationData.buildingBonusA = buildingBonusA;
 	simulationData.buildingBonusB = buildingBonusB;
 	simulationData.printPartials = printPartials;
+	simulationData.behaviorHistory = behaviorHistory;
 
 	//Launch simulation threads according to number of samples
 	vector<thread> tl;
@@ -160,11 +165,12 @@ int main(int argc, char* argv[]){
 		for(ti = 0; ti < threads; ti++){
 
 			if(!tb[ti] && scount!=samples){
+				simulationData.sampleid = scount++;
 
 				fut[ti] = async(Simulation::simulationV8,simulationData, ti);
 
 				tb[ti] = true;
-				scount++;
+				
 			}
 
 			if(tb[ti]==true){

@@ -25,6 +25,10 @@ class Simulation{
 
 			out.lock();
 			//simResults.push_back(simulationResults);
+			if(simulationData.behaviorHistory){
+				cout<<simulationResults.behaviorHistoryStr;
+
+			}
 			if(simulationData.ephPopHistory){
 				for(int i = 0; i < simulationResults.typeAPopHistory.size(); i++){
 					//cycle;A;B;ephs;avgDegree

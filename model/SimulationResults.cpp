@@ -19,6 +19,7 @@ class SimulationResults{
 	double avgCoeff;
 	double avgFitness;
 	int fixationCycles;
+	string behaviorHistoryStr;
 
 
 };
