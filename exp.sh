@@ -15,7 +15,7 @@
 #SBATCH --exclusive
 #SBATCH --mail-user=guilherme.araujo@imd.ufrn.br
 #SBATCH --mail-type=ALL
-#SBATCH --time=2-0:0
+#SBATCH --time=0-4:0
 
 module load softwares/python/3.6-anaconda-5.0.1
 module load compilers/gnu/7.3
@@ -28,11 +28,11 @@ else
 	chmod +x main
 fi
 
-mkdir $19
+mkdir $(19)
 
 for i in $(seq 0 $2); 
 do
 	python3 main.py --operation=newGraph --graphtype=$3 --numNodes=$4 --numEdges=$5
-	./main samples $6 ephBonus $7 ephPopHistory $8 threads $9 cycles $10 ephTime $11 ni $12 sampleId $i printPartials $14 rBMA $15 rBMB $16 bBA $17 bBB $18 >> $19/$20
+	./main samples $6 ephBonus $7 ephPopHistory $8 threads $9 cycles $(10) ephTime $(11) ni $(12) sampleId $i printPartials $(14) rBMA $(15) rBMB $(16) bBA $(17) bBB $(18) >> $(19)/$(20)
 done
 
