@@ -24,19 +24,20 @@ FILE=main
 if [ -f "$FILE" ]; then
 	echo "$FILE exists"
 else
+#	scl enable devtoolset-7 bash
 	g++ main.cpp -o main -O3 -lpthread
 	chmod +x main
 fi
 
-mkdir $(19)
+mkdir ./${19}
 
-touch $(19)/job-over.txt
-echo "scale=2; 0/$2" | bc > $(19)/job-percent.txt
+touch ./${19}/job-over.txt
+echo "scale=2; 0/$2" | bc > ${19}/job-percent.txt
 for i in $(seq 1 $2); 
 do
 	python3 main.py --operation=newGraph --graphtype=$3 --numNodes=$4 --numEdges=$5
-	./main samples $6 ephBonus $7 ephPopHistory $8 threads $9 cycles $(10) ephTime $(11) ni $(12) sampleId $i printPartials $(14) rBMA $(15) rBMB $(16) bBA $(17) bBB $(18) >> $(19)/$(20)
-	echo "scale=2; $i/$2" | bc > job-percent.txt
+	./main samples $6 ephBonus $7 ephPopHistory $8 threads $9 cycles ${10} ephTime ${11} ni ${12} sampleId $i printPartials ${14} rBMA ${15} rBMB ${16} bBA ${17} bBB ${18} >> ${19}/${20}
+	echo "scale=2; $i/$2" | bc > ./${19}/job-percent.txt
 done
 
-echo 1 > $(19)/job-over.txt
+echo 1 > ./${19}/job-over.txt
