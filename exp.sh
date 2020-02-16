@@ -28,6 +28,7 @@ else
 	chmod +x main
 fi
 
+rm -rf ${19}
 mkdir ${19}
 
 touch ${19}/job-over.txt
