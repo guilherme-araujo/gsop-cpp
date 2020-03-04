@@ -41,7 +41,7 @@ class GsopNode{
 
   double getCoeffV8(SimulationData sd){
     double stateCoeff = this->coeff;
-    double adjustedBonus = this->getBonus();
+    double adjustedBonus = this->getBonus(&sd);
 
     if(this->behavior == PRODUCING){
       if(this->type == 'A'){
@@ -62,9 +62,11 @@ class GsopNode{
     return stateCoeff + adjustedBonus;
   }
 
-	double getBonus(){
-		if(this->eph != NULL){
-			return this->eph->bonus;
+	double getBonus(SimulationData *sd = NULL){
+		if(this->eph != NULL){   
+      if(sd!=NULL && this->type == 'B'){
+        return sd->ephBonusB;
+      }	else return this->eph->bonus;
 		} else return 0;
 	}
 

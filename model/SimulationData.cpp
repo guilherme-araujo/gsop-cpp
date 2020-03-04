@@ -17,6 +17,7 @@ class SimulationData{
 	int cycles;
 	int plotDensity;
 	double ephBonus;
+	double ephBonusB;
 	double ephStartRatio;
 	double ephBuildingRatio;
 	double ephReusingRatio;

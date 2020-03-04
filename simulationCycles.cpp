@@ -55,28 +55,64 @@ class SimulationCycles{
 			//selected type. saving for reuse of eph only by same type
 			char selectedType = n->type;
 
-			vector<int> roleta;
+			vector<double> roleta;
 			vector<int> neighborsList = n->neighbors;
-
+			double qtd = 0;
 			for(int i = 0; i < neighborsList.size(); i++){
 				GsopNode neighbor = (*nodes)[neighborsList[i]];
 
 				//adjusted roulette amounts by node state
-				int qtd = (int) (neighbor.getCoeffV8(simulationData)*100);
-				for(int j = 0; j < qtd; j++){
-					roleta.push_back(neighbor.id);
-				}
+				
+				qtd += neighbor.getCoeffV8(simulationData);
+				//for(int j = 0; j < qtd; j++){
+				roleta.push_back(qtd);
+				
+				//}
 			}
+
+			/*for(int i = 0; i < roleta.size(); i++){
+				cout<<roleta[i]<<" ";
+			}
+			cout<<endl;*/
 
 			Eph *eph = NULL;
 			GsopNode *sorteado;
 
 			if(roleta.size()==0){
 				sorteado = &(*nodes)[key];
-			}else{
-				uniform_int_distribution<> distr(0, roleta.size()-1);
-				int chosen = distr(*eng);//rand()%roleta.size();
-				sorteado = &(*nodes)[roleta[chosen]];
+			}else if(roleta.size()==1){
+				sorteado = &(*nodes)[neighborsList[0]];
+			}else {
+				int iSorteado = 0;
+				uniform_real_distribution<> distr(0, roleta[roleta.size()-1]);
+				double chosen = distr(*eng);//rand()%roleta.size();
+				//cout<<"chosen "<<chosen<<endl;
+				/*for(iSorteado = 0; iSorteado < roleta.size(); iSorteado++){
+					//cout<<chosen<<" "<<roleta[iSorteado]<<endl;
+					if(chosen<=roleta[iSorteado]){
+						break;
+					}
+				}*/
+				int l = 1; int r = roleta.size()-1;
+				while(l<=r){
+					int m = ((r-l)/2)+l;
+					double nl = roleta[m-1];
+					double nr = roleta[m];
+					if(chosen>nl && chosen<=nr){
+						iSorteado = m;
+						break;
+					}
+					if(chosen>nr){
+						l = m+1;
+					}else{
+						r = m-1;
+					}
+
+				}
+
+				//cout<<" isorteado "<<iSorteado<<endl;
+				int sorteadoIndex = neighborsList[iSorteado];
+				sorteado = &(*nodes)[sorteadoIndex];
 			}
 
 			sorteado->fitness++;

@@ -48,7 +48,7 @@ public:
 				//separates state using from producing
 				int aEphIndexBuilding = aEphIndex * simulationData.ephBuildingRatio;
 				int aEphIndexUsingShared = (aEphIndex * simulationData.ephReusingRatio) + aEphIndexBuilding;
-				cout<<aEphIndex<<" "<<aEphIndexBuilding<<" "<<aEphIndexUsingShared<<endl;
+				//cout<<aEphIndex<<" "<<aEphIndexBuilding<<" "<<aEphIndexUsingShared<<endl;
 
 				if ((i < aEphIndex) && simulationData.isAProducer) {
 					if(i < aEphIndexBuilding){
@@ -97,7 +97,7 @@ public:
 				//int bEphIndexHalf = (simulationData.initialPop * abrate * simulationData.ephStartRatio * 0.5)+(simulationData.initialPop * abrate);
 				int bEphIndexBuilding = (bEphIndex - simulationData.initialPop * abrate) * simulationData.ephBuildingRatio + (simulationData.initialPop * abrate);
 				int bEphIndexUsingShared = ((bEphIndex - simulationData.initialPop * abrate) * simulationData.ephReusingRatio) + bEphIndexBuilding;
-				cout<<bEphIndex<<" "<<bEphIndexBuilding<<" "<<bEphIndexUsingShared<<endl;
+				//cout<<bEphIndex<<" "<<bEphIndexBuilding<<" "<<bEphIndexUsingShared<<endl;
 				if (i < bEphIndex && simulationData.isBProducer) {
 					if(i < bEphIndexBuilding){
 						Eph *e = new Eph(simulationData.ephBonus);
@@ -135,6 +135,7 @@ public:
 					nodes[i].behaviorTimer = 0;
 				}
 			}
+			//cout<<nodes[i].type<<" "<<nodes[i].behavior<<" "<<nodes[i].getCoeffV8(simulationData)<<endl;
 			nodesmap.insert(pair<int,GsopNode>(nodes[i].id,nodes[i]));
 		}
 

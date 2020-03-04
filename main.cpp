@@ -22,6 +22,7 @@ int main(int argc, char* argv[]){
 	int cycles = 1000;
 	int numNodes = 100;
 	double ephBonus = 0.04;
+	double ephBonusB = -1;
 	int threads = 1;
 	double ephStartRatio = 0.6;
 	double ephBuildingRatio = 0.3333;
@@ -45,6 +46,7 @@ int main(int argc, char* argv[]){
 	string arg_cycles = "cycles";
 	string arg_numNodes = "numNodes";
 	string arg_ephBonus = "ephBonus";
+	string arg_ephBonusB = "ephBonusB";
 	string arg_threads = "threads";
 	string arg_ephStartRatio = "ephStartRatio";
 	string arg_ephPopHistory = "ephPopHistory";
@@ -70,6 +72,8 @@ int main(int argc, char* argv[]){
 			numNodes = stoi(argv[i+1]);
 		}else if(arg_ephBonus.compare(argv[i])==0){
 			ephBonus = stod(argv[i+1]);
+		}else if(arg_ephBonusB.compare(argv[i])==0){
+			ephBonusB = stod(argv[i+1]);
 		}else if(arg_threads.compare(argv[i])==0){
 			threads = stoi(argv[i+1]);
 		}else if(arg_ephStartRatio.compare(argv[i])==0){
@@ -120,11 +124,14 @@ int main(int argc, char* argv[]){
 	Parser p;
 	GsopGraph *g = p.parse("graph.txt");
 	//cout<<g->size()<<endl;
-
+	if(ephBonusB==-1){
+		ephBonusB = ephBonus;
+	}
 	//Build SimulationData object
 	SimulationData simulationData;
 
 	simulationData.ephBonus = ephBonus;
+	simulationData.ephBonusB = ephBonusB;
 	simulationData.ephStartRatio = ephStartRatio;
 	simulationData.ephBuildingRatio = ephBuildingRatio;
 	simulationData.ephReusingRatio = ephReusingRatio;
