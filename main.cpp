@@ -23,7 +23,9 @@ int main(int argc, char* argv[]){
 	int numNodes = 100;
 	double ephBonus = 0.04;
 	int threads = 1;
-	double ephStartRatio = 0.5;
+	double ephStartRatio = 0.6;
+	double ephBuildingRatio = 0.3333;
+	double ephReusingRatio = 0.3333;
 	bool ephPopHistory = false;
 	bool behaviorHistory = false;
 	int ephTime = 30;
@@ -124,6 +126,8 @@ int main(int argc, char* argv[]){
 
 	simulationData.ephBonus = ephBonus;
 	simulationData.ephStartRatio = ephStartRatio;
+	simulationData.ephBuildingRatio = ephBuildingRatio;
+	simulationData.ephReusingRatio = ephReusingRatio;
 	simulationData.ephBirthGenerationChance = 0.5;
 	simulationData.aOnly = false;
 	simulationData.neighborhoodInheritance = ni;

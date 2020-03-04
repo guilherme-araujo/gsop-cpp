@@ -18,6 +18,8 @@ class SimulationData{
 	int plotDensity;
 	double ephBonus;
 	double ephStartRatio;
+	double ephBuildingRatio;
+	double ephReusingRatio;
 	double ephBirthGenerationChance;
 	bool neighborhoodInheritance;
 	bool aOnly;

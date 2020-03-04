@@ -46,10 +46,12 @@ public:
 				nodes[i].coeff = 1.0;
 				int aEphIndex = simulationData.initialPop * abrate * simulationData.ephStartRatio;
 				//separates state using from producing
-				int aEphIndexHalf = simulationData.initialPop * abrate * simulationData.ephStartRatio *0.5;
+				int aEphIndexBuilding = aEphIndex * simulationData.ephBuildingRatio;
+				int aEphIndexUsingShared = (aEphIndex * simulationData.ephReusingRatio) + aEphIndexBuilding;
+				cout<<aEphIndex<<" "<<aEphIndexBuilding<<" "<<aEphIndexUsingShared<<endl;
 
 				if ((i < aEphIndex) && simulationData.isAProducer) {
-					if(i < aEphIndexHalf){
+					if(i < aEphIndexBuilding){
 						Eph *e = new Eph(simulationData.ephBonus);
 
 						//randomize eph time
@@ -59,7 +61,17 @@ public:
 
 						nodes[i].eph = e;
 						nodes[i].behavior = USING;
-					}else{
+					} else if(i < aEphIndexUsingShared){
+						Eph *e = new Eph(simulationData.ephBonus);
+
+						//randomize eph time, -1 because reused ephs have had at least 1 cycle with previous owner
+						uniform_int_distribution<> distr_eph(1, simulationData.ephTime-1);
+						int eTime = distr_eph(eng);
+						e->time = eTime;
+
+						nodes[i].eph = e;
+						nodes[i].behavior = USING_SHARED;
+					} else{
 						nodes[i].eph = NULL;
 						nodes[i].behavior = PRODUCING;
 					}
@@ -68,7 +80,7 @@ public:
 					nodes[i].behavior = SEARCHING;
 				}
 
-				if(nodes[i].behavior != USING){
+				if(nodes[i].behavior != USING && nodes[i].behavior != USING_SHARED){
 					//randomize behavior time
 					uniform_int_distribution<> distr_behavior(1, simulationData.behaviorTime);
 					int sTime = distr_behavior(eng);
@@ -82,10 +94,12 @@ public:
 				nodes[i].coeff = 1.0;
 				int bEphIndex = (simulationData.initialPop * abrate * simulationData.ephStartRatio)+(simulationData.initialPop * abrate);
 				//separates state using from producing
-				int bEphIndexHalf = (simulationData.initialPop * abrate * simulationData.ephStartRatio * 0.5)+(simulationData.initialPop * abrate);
-
+				//int bEphIndexHalf = (simulationData.initialPop * abrate * simulationData.ephStartRatio * 0.5)+(simulationData.initialPop * abrate);
+				int bEphIndexBuilding = (bEphIndex - simulationData.initialPop * abrate) * simulationData.ephBuildingRatio + (simulationData.initialPop * abrate);
+				int bEphIndexUsingShared = ((bEphIndex - simulationData.initialPop * abrate) * simulationData.ephReusingRatio) + bEphIndexBuilding;
+				cout<<bEphIndex<<" "<<bEphIndexBuilding<<" "<<bEphIndexUsingShared<<endl;
 				if (i < bEphIndex && simulationData.isBProducer) {
-					if(i < bEphIndexHalf){
+					if(i < bEphIndexBuilding){
 						Eph *e = new Eph(simulationData.ephBonus);
 
 						//randomize eph time
@@ -94,7 +108,16 @@ public:
 						e->time = eTime;
 						nodes[i].eph = e;
 						nodes[i].behavior = USING;
-					} else{
+					}else if(i < bEphIndexUsingShared){
+						Eph *e = new Eph(simulationData.ephBonus);
+
+						//randomize eph time
+						uniform_int_distribution<> distr_eph(1, simulationData.ephTime-1);
+						int eTime = distr_eph(eng);
+						e->time = eTime;
+						nodes[i].eph = e;
+						nodes[i].behavior = USING_SHARED;
+					}else{
 						nodes[i].eph = NULL;
 						nodes[i].behavior = PRODUCING;
 					}
@@ -103,7 +126,7 @@ public:
 					nodes[i].behavior = SEARCHING;
 				}
 
-				if(nodes[i].behavior != USING){
+				if(nodes[i].behavior != USING && nodes[i].behavior != USING_SHARED){
 					//randomize behavior time
 					uniform_int_distribution<> distr_behavior(1, simulationData.behaviorTime);
 					int sTime = distr_behavior(eng);
