@@ -12,7 +12,7 @@
 module load softwares/python/3.6-anaconda-5.0.1
 module load compilers/gnu/7.3
 
-FILE=main-03-04-2020
+FILE=main-2020-03-19
 if [ -f "$FILE" ]; then
 	echo "$FILE exists"
 else
