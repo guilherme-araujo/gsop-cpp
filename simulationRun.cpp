@@ -48,7 +48,7 @@ public:
 				//separates state using from producing
 				int aEphIndexBuilding = aEphIndex * simulationData.ephBuildingRatio;
 				int aEphIndexUsingShared = (aEphIndex * simulationData.ephReusingRatio) + aEphIndexBuilding;
-				//cout<<aEphIndex<<" "<<aEphIndexBuilding<<" "<<aEphIndexUsingShared<<endl;
+				cout<<aEphIndex<<" "<<aEphIndexBuilding<<" "<<aEphIndexUsingShared<<endl;
 
 				if ((i < aEphIndex) && simulationData.isAProducer) {
 					if(i < aEphIndexBuilding){
@@ -60,7 +60,7 @@ public:
 						e->time = eTime;
 
 						nodes[i].eph = e;
-						nodes[i].behavior = USING;
+						nodes[i].behavior = PRODUCING;
 					} else if(i < aEphIndexUsingShared){
 						Eph *e = new Eph(simulationData.ephBonus);
 
@@ -73,7 +73,7 @@ public:
 						nodes[i].behavior = USING_SHARED;
 					} else{
 						nodes[i].eph = NULL;
-						nodes[i].behavior = PRODUCING;
+						nodes[i].behavior = USING;
 					}
 				}else{
 					nodes[i].eph = NULL;
@@ -97,7 +97,7 @@ public:
 				//int bEphIndexHalf = (simulationData.initialPop * abrate * simulationData.ephStartRatio * 0.5)+(simulationData.initialPop * abrate);
 				int bEphIndexBuilding = (bEphIndex - simulationData.initialPop * abrate) * simulationData.ephBuildingRatio + (simulationData.initialPop * abrate);
 				int bEphIndexUsingShared = ((bEphIndex - simulationData.initialPop * abrate) * simulationData.ephReusingRatio) + bEphIndexBuilding;
-				//cout<<bEphIndex<<" "<<bEphIndexBuilding<<" "<<bEphIndexUsingShared<<endl;
+				cout<<bEphIndex<<" "<<bEphIndexBuilding<<" "<<bEphIndexUsingShared<<endl;
 				if (i < bEphIndex && simulationData.isBProducer) {
 					if(i < bEphIndexBuilding){
 						Eph *e = new Eph(simulationData.ephBonus);
@@ -107,7 +107,7 @@ public:
 						int eTime = distr_eph(eng);
 						e->time = eTime;
 						nodes[i].eph = e;
-						nodes[i].behavior = USING;
+						nodes[i].behavior = PRODUCING;
 					}else if(i < bEphIndexUsingShared){
 						Eph *e = new Eph(simulationData.ephBonus);
 
@@ -119,7 +119,7 @@ public:
 						nodes[i].behavior = USING_SHARED;
 					}else{
 						nodes[i].eph = NULL;
-						nodes[i].behavior = PRODUCING;
+						nodes[i].behavior = USING;
 					}
 				} else{
 					nodes[i].eph = NULL;

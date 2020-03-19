@@ -49,6 +49,8 @@ int main(int argc, char* argv[]){
 	string arg_ephBonusB = "ephBonusB";
 	string arg_threads = "threads";
 	string arg_ephStartRatio = "ephStartRatio";
+	string arg_ephBuildingRatio = "ephBuildingRatio";
+	string arg_ephReusingRatio = "ephReusingRatio";
 	string arg_ephPopHistory = "ephPopHistory";
 	string arg_behaviorHistory = "behaviorHistory";
 	string arg_ephTime = "ephTime";
@@ -78,6 +80,10 @@ int main(int argc, char* argv[]){
 			threads = stoi(argv[i+1]);
 		}else if(arg_ephStartRatio.compare(argv[i])==0){
 			ephStartRatio = stod(argv[i+1]);
+		}else if(arg_ephBuildingRatio.compare(argv[i])==0){
+			ephBuildingRatio = stod(argv[i+1]);
+		}else if(arg_ephReusingRatio.compare(argv[i])==0){
+			ephReusingRatio = stod(argv[i+1]);
 		}else if(arg_ephPopHistory.compare(argv[i])==0){
 			ephPopHistory = stoi(argv[i+1]);
 		}else if(arg_ephTime.compare(argv[i])==0){
