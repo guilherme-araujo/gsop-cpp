@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#SBATCH --job-name=Sh10b8
+#SBATCH --job-name=c10b5
 #SBATCH --mem=128000
 #SBATCH --cpus-per-task=64
 ##SBATCH --hint=compute_bound
@@ -25,8 +25,8 @@ touch job-over.txt
 echo "scale=2; 0/1000" | bc > job-percent.txt
 for i in $(seq 1 1000); 
 do
-	python3 main.py --operation=newGraph --graphtype=ba --numNodes=500 --numEdges=4
-	./$FILE samples 5000 ephStartRatio 0.60 ephBuildingRatio 0.667 ephReusingRatio 0.166 ephBonus 0.08 ephBonusB 0.01 ephPopHistory 0 threads 72 cycles 5000 ephTime 30 ni 0 sampleId $i printPartials 1 rBMA 0.125 rBMB 8 bBA 0.95 bBB 0.95 >> exp.txt	
+	python3 main.py --operation=newGraph --graphtype=complete --numNodes=500 --numEdges=4
+	./$FILE samples 5000 ephStartRatio 0.60 ephBuildingRatio 0.667 ephReusingRatio 0.166 ephBonus 0.05 ephBonusB 0.05 ephPopHistory 0 threads 72 cycles 5000 ephTime 30 ni 0 sampleId $i printPartials 1 rBMA 1 rBMB 1 bBA 0.95 bBB 0.95 >> exp.txt	
 	echo "scale=2; $i/1000" | bc > job-percent.txt
 done
 

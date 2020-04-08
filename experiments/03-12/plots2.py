@@ -57,7 +57,16 @@ awperc = awin / total
 bwperc = bwin / total
 unperc = undef / total
 
-winc = str(awin)+" "+str(bwin)+" "+str(undef)+"\n"+str(awperc)+" "+str(bwperc)+" "+str(unperc)+"\n"
+undefa = alla5k.loc[alla5k<500]
+undefa = undefa.loc[undefa>0]
+
+undefb = allb5k.loc[allb5k<500]
+undefb = undefb.loc[undefb>0]
+
+lundefa = sum(undefa)/500
+lundefb = sum(undefb)/500
+
+winc = str(awin)+","+str(bwin)+","+str(undef)+"\n"+str(awperc)+","+str(bwperc)+","+str(unperc)+","+str(lundefa/total)+","+str(lundefb/total)+"\n"
 winc_file.write(winc)
 winc_file.close()
 
