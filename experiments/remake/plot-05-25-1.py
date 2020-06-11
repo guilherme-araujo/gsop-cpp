@@ -5,6 +5,7 @@ from statistics import stdev
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+import matplotlib.ticker as mtick
 
 pd.set_option('display.max_rows', None)
 
@@ -30,7 +31,8 @@ files = [
 
 all = pd.DataFrame([], columns=['qta', 'qtb', 'type'])
 for f in files:
-    with open(f['file']+'/'+f['file']+'.txt') as csv_file_r:
+    #with open(f['file']+'/'+f['file']+'.txt') as csv_file_r:
+    with open(f['file']+'.txt') as csv_file_r:
         csv_reader = csv.reader(csv_file_r, delimiter=';')
         qtas = []
         qtbs = []
@@ -39,11 +41,11 @@ for f in files:
             if(row[0]!='partial'):            
                 qta = int(row[0])
                 qtb = int(row[1])
-                result = 'Undef.'
+                result = 'Undef. simulations'
                 if qta == 500:
-                    result = 'A'
+                    result = 'A fix. simulations'
                 elif qta == 0:
-                    result = 'B'
+                    result = 'B fix. simulations'
                 qtas.append(qta)
                 qtbs.append(qtb)
                 results.append(result)
@@ -65,7 +67,7 @@ resumo = all.groupby(["bonus", "type"])["qta"].count().unstack(fill_value=0).sta
 
 resumo2 = resumo
 for x in resumo["bonus"].unique():
-    u_x = all.loc[(all["type"]=="Undef.") & (all["bonus"]==x)]    
+    u_x = all.loc[(all["type"]=="Undef. simulations") & (all["bonus"]==x)]    
     u_x_a = u_x["qta"].sum()
     u_x_b = u_x["qtb"].sum()
     col_a = {"bonus":x, "type":"Undef. A", "sum":u_x_a/500}
@@ -73,20 +75,22 @@ for x in resumo["bonus"].unique():
     resumo = resumo.append(col_a, ignore_index=True)
     resumo = resumo.append(col_b, ignore_index=True)
 print(resumo)
-fig_dims = (6, 4)
+fig_dims = (8, 4)
 fig, ax = plt.subplots(figsize=fig_dims)
 
 
 plt.fill_between(resumo[~resumo.bonus.duplicated()].bonus, 0, 
-                 resumo.loc[resumo["type"]=="Undef. A", "sum"], facecolor="lawngreen", alpha=0.5, label="A %")
+                 resumo.loc[resumo["type"]=="Undef. A", "sum"], facecolor="lawngreen", alpha=0.5, label="A nodes in Undef.")
 plt.fill_between(resumo[~resumo.bonus.duplicated()].bonus, resumo.loc[resumo["type"]=="Undef. A", "sum"], 
-                 resumo.loc[resumo["type"]=="Undef.", "sum"], facecolor="forestgreen", alpha=0.5, label="B %")
+                 resumo.loc[resumo["type"]=="Undef. simulations", "sum"], facecolor="forestgreen", alpha=0.5, label="B nodes in Undef.")
 fig = sns.lineplot(data=resumo2, x="bonus", y="sum", hue="type")
+ax.yaxis.set_major_formatter(mtick.PercentFormatter(xmax=6242))
 plt.legend(bbox_to_anchor=(1.05, 1.0), loc='upper left')
+
 plt.tight_layout()
-ax.set(xlabel="α", ylabel="Fixation count" )
+ax.set(xlabel="α", ylabel="Nodes % (All simulations)" )
 plt.setp(ax.get_xticklabels(), rotation=90, horizontalalignment='center')
 
-#plt.show()
-plt.savefig("lineplot.svg")
-plt.savefig("lineplot.png", dpi=200)
+plt.show()
+#plt.savefig("lineplot.svg")
+#plt.savefig("lineplot.png", dpi=200)

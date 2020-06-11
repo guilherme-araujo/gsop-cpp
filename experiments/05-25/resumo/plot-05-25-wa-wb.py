@@ -5,19 +5,28 @@ from statistics import stdev
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+import matplotlib.ticker as mtick
 import gc
 
 #pd.set_option('display.max_rows', None)
 
 files = [
-    {'file': 'b2g2', 'bonus': 1.0}, #'ωA/ωB = 1.0'
-    {'file': 'b2g4', 'bonus': 2.0}, #'ωA/ωB = 2.0'
-    {'file': 'b2g8', 'bonus': 4.0}, #'ωA/ωB = 4.0'
+    {'file': 'b2g2', 'bonus': np.log(1.0)}, #'ωA/ωB = 1.0'
+    {'file': 'b2g3', 'bonus': np.log(1.5)}, #'ωA/ωB = 1.5'
+    {'file': 'b2g4', 'bonus': np.log(2.0)}, #'ωA/ωB = 2.0'
+    {'file': 'b2g5', 'bonus': np.log(2.5)}, #'ωA/ωB = 2.5'
+    {'file': 'b2g6', 'bonus': np.log(3.0)}, #'ωA/ωB = 3.0'
+    {'file': 'b2g7', 'bonus': np.log(3.5)}, #'ωA/ωB = 3.5'
+    {'file': 'b2g8', 'bonus': np.log(4.0)}, #'ωA/ωB = 4.0'
 ]
 
 files2 = [
-    {'file': 'b2g4', 'bonus': 0.5}, #'ωA/ωB = 0.5'
-    {'file': 'b2g8', 'bonus': 0.25}, # 'ωA/ωB = 0.25'
+    {'file': 'b2g3', 'bonus': np.log(0.666)}, #'ωA/ωB = 0.666'
+    {'file': 'b2g4', 'bonus': np.log(0.5)}, #'ωA/ωB = 0.5'
+    {'file': 'b2g5', 'bonus': np.log(0.4)}, #'ωA/ωB = 0.4'
+    {'file': 'b2g6', 'bonus': np.log(0.333)}, #'ωA/ωB = 0.333'
+    {'file': 'b2g7', 'bonus': np.log(0.285)}, #'ωA/ωB = 0.285'
+    {'file': 'b2g8', 'bonus': np.log(0.25)}, #'ωA/ωB = 0.25'
 ]
 
 al = []
@@ -97,7 +106,11 @@ print(resumo)
 fig = sns.lineplot(data=resumo, x="bonus", y="sum", hue="type")
 plt.legend(bbox_to_anchor=(1.05, 1.0), loc='upper left')
 
-ax.set(xlabel="log(ωA/ωB)", ylabel="Fixation %", xscale='log' )
+#ax.set(xlabel="log(ωA/ωB)", ylabel="Fixation %", xscale='log' )
+ax.set(xlabel="ln(ωA/ωB)", ylabel="Fixation %" )
+ax.yaxis.set_major_formatter(mtick.PercentFormatter(xmax=6242))
+ax.xaxis.set_major_formatter(mtick.ScalarFormatter())
+ax.set_xticks(resumo['bonus'].unique())
 plt.setp(ax.get_xticklabels(), rotation=90, horizontalalignment='center')
 plt.tight_layout()
 
