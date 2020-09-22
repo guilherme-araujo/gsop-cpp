@@ -52,7 +52,7 @@ ax.yaxis.set_major_formatter(mtick.PercentFormatter(xmax=5000000))
 #ax.xaxis.set_major_formatter(mtick.ScalarFormatter())
 #ax.set_xticks(resumo['bonus'].unique())
 #plt.setp(ax.get_xticklabels(), rotation=90, horizontalalignment='center')
-plt.ylim(1200000,2000000)
+#plt.ylim(1200000,2000000)
 plt.tight_layout()
 
 plt.show()
