@@ -23,7 +23,7 @@ touch job-over.txt
 echo "scale=2; 0/500" | bc > job-percent.txt
 for i in $(seq 1 500); 
 do
-	python3 main.py --operation=newGraph --graphtype=ba --numNodes=200 --numEdges=4
+	python3 main.py --operation=newGraph --graphtype=ba --numNodes=500 --numEdges=4
 	./$FILE samples 5000 ephBonus 0.08 ephBonusB 0.08 ephStartRatio 0.50 ephBuildingRatio 0.0 ephReusingRatio 0.0 ephPopHistory 0 threads 72 cycles 0 ephTime 30 ni 0 sampleId $i printPartials 1 rBMA 1 rBMB -1 bBA -1 bBB -1 bEph 1 ephBirthGenChance 0.5 >> b008.txt	
 	echo "scale=2; $i/500" | bc > job-percent.txt
 done
