@@ -23,10 +23,8 @@ touch job-over.txt
 echo "scale=2; 0/100" | bc > job-percent.txt
 for i in $(seq 1 100); 
 do
-	python3 main.py --operation=newGraph --graphtype=ba --numNodes=200 --numEdges=3
-	./$FILE samples 5000 ephBonus 0.04 ephBonusB 0.02 ephStartRatio 0.6 ephBuildingRatio 0.6666 ephReusingRatio 0.1666 ephPopHistory 0 threads 72 cycles 0 ephTime 30 ni 0 sampleId $i printPartials 1 rBMA 0.5 rBMB 1 bBA 0.97 bBB 0.97 >> a4g2Copyrights © 2020 All Rights Reserved by BioME.
- labinfo@lncc.br  +55 (24) 2233-6101  +55 (24) 2233-6101Copyrights © 2020 All Rights Reserved by BioME.
- labinfo@lncc.br  +55 (24) 2233-6101  +55 (24) 2233-6101.txt	
+	python3 main.py --operation=newGraph --graphtype=ws-20p --numNodes=500 --numEdges=4
+	./$FILE samples 5000 ephBonus 0.02 ephBonusB 0.04 ephStartRatio 0.6 ephBuildingRatio 0.6666 ephReusingRatio 0.1666 ephPopHistory 0 threads 72 cycles 0 ephTime 30 ni 0 sampleId $i printPartials 1 rBMA 1 rBMB 0.5 bBA 0.97 bBB 0.97 >> b4g2.txt	
 	echo "scale=2; $i/100" | bc > job-percent.txt
 done
 
