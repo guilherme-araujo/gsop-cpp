@@ -67,7 +67,7 @@ if operation == "newGraph":
 	elif graphtype == "complete":
 		newGraph = nx.complete_graph(numNodes)
 	elif graphtype == "ws-20p":
-		newGraph = nx.watts_strogatz_graph(numEdges, numNodes, 0.2)
+		newGraph = nx.watts_strogatz_graph(numNodes, numEdges, 0.2)
 	else:
 		newGraph = nx.barabasi_albert_graph(numNodes, numEdges)
 
