@@ -1,3 +1,22 @@
+# Summary
+
+## Figure 2a/2c
+
+Scripts will generate data varying the A bonus from 0.0 to 0.15 while the B bonus will always be 0.0
+
+## Figure 2b/2c
+
+Scripts will vary both A and B bonus values from 0.0 to 0.15 simultaneously, but only A has reuse multiplier at 1. 
+
+## Figure 4a
+
+First half: A bonus starts at 0.02, and rBMA goes from 1 to 4 (reuse bonus: 0.02, 0.03 ... 0.08). 
+Second half: A bonus goes from 0.02 to 0.08, and rBMA is adjusted in order to keep the reuse bonus at 0.02.
+
+## Figure 4b
+
+Bonus A goes from 0.01 to 0.09 while bonus B varies from 0.09 to 0.01. The reuse bonus equals the normal bonus for the opposite population.
+
 # Instructions
 
 ## Before running the simulations
