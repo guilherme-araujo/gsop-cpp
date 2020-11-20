@@ -37,7 +37,7 @@ for arg in sys.argv:
 		numNodes = int(num[1])
 	elif "--numEdges" in arg:
 		num = arg.split("=")
-		numEdges = int(num[1])
+		numEdges = float(num[1])
 	elif "--ephBonus" in arg:
 		num = arg.split("=")
 		ephBonus = float(num[1])
