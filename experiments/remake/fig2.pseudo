@@ -1,0 +1,128 @@
+nodes = read(graph.txt)
+simOptions = parse(args)
+
+//returns the relative fitness of an individual.
+//its value is given a bonus if an extended phenotype is being occupied by it
+function getFitness(Node n) do
+    ePh = n.getExtendedPhenotype()
+    if (ePh is not NULL) do
+        return 1.0 + ePh.getBonus()
+    end else do
+        return 1.0
+    end
+end
+
+//returns the index of a chosen individual in a list, chosen randomly but weighted according to their relative fitness.
+function roulette(Node nodeList[]) do
+    roulette[]
+    sum = 0.0
+    for (n in nodeList) do
+        sum = sum + getFitness(n)
+        roulette.add(sum)
+    end
+    //choosing reproducing neighbor
+    chosenValue = randomRealNumber(0, sum)
+    chosenNeighborIndex = -1
+    for (r = 0; r < roulette.size(); r++) do
+        if roulette[r] > chosenValue do
+            chosenNeighborIndex = r
+            break
+        end 
+    end
+end
+
+//shuffle() randomly reorders the node indexes
+shuffle(nodes)
+
+//initialization
+for (i = 0; i < nodes.size(); i++) do
+    if (i < nodes.size()*0.5) do
+        nodes[i].type = 'A'
+        //half of all type A nodes start with an extended phenotype
+        if(i < nodes.size()*0.5*0.5) do
+            //generates an extended phenotype with a random expiry time between 1 and 30 cycles
+            nodes[i].setExtendedPhenotype(new ExtendedPhenotype(simOptions.bonusA))
+        end
+    end else do
+        //if the type B nodes generate an extended phenotype (fig. 2b) half of all type B nodes start with an extended phenotype
+        if (simOptions.isTypeBGenerator) do
+            if(i < nodes.size()*0.5*0.5 + nodes.size()*0.5) do
+                //generates an extended phenotype with a random expiry time between 1 and 30 cycles
+                nodes[i].setExtendedPhenotype(new ExtendedPhenotype(simOptions.bonusB))
+            end
+        end
+        nodes[i].type = 'B'
+    end
+end
+
+//main cycle
+for (i = 0; i < simOptions.cycles; i++) do 
+    shuffle(nodes)
+    //Runs a number of death/birth cycles (4% in the article)
+    for (d = 0; d < simOptions.deathsByCycle; d++) do
+        neighbors = node[d].getNeighbors()
+        chosenNeighborIndex = roulette(neighbors)
+        //generating new individual
+        newNode = new Node()
+        newNode.type = nodes[chosenNeighborIndex].type 
+        newNode.setExtendedPhenotype(NULL)
+        //extended phenotype generation chance (50%)
+        willGenerateExtendedPhenotype = randomRealNumber(0, 1)
+        if (willGenerateExtendedPhenotype < 0.5) do
+            if (newNode.type == A or simOptions.isTypeBGenerator) do
+                //generates an extended phenotype with an expiry time of 30 cycles
+                newNode.setExtendedPhenotype(new ExtendedPhenotype(simOptions.bonusA, 30))
+            end
+        end
+        //saving extended phenotype reference
+        abandoned = nodes[d].getExtendedPhenotype()
+        //replaces old individual 
+        nodes[d] = newNode
+        //if there is an abandoned extended phenotype, a random type A neighbor may be selected to occupy it
+        if (abandoned is not NULL) do
+            shuffle(neighbors)
+            occupied = false
+            foreach (neighbor in neighbors) do
+                if (neighbor.type == 'A') do
+                    if (neighbor.getExtendedPhenotype() is NULL) do
+                        neighbor.setExtendedPhenotype(abandoned)
+                        occupied = true
+                        break
+                    end
+                end
+            end
+            //checks if the extended phenotype has been occupied by a neighbor. If not, choose a random type A individual in the entire population
+            if (not occupied) do
+                shuffle(nodes)
+                for (node in nodes) do
+                    if (node.type == 'A') do
+                        if (node.getExtendedPhenotype() is NULL) do
+                            node.setExtendedPhenotype(abandoned)
+                            break
+                        end    
+                    end   
+                end
+            end
+        end
+    end
+    //updates extended phenotype expiry times
+    foreach (node in nodes) do
+        node.getExtendedPhenotype().time = node.getExtendedPhenotype().time - 1
+        if (node.getExtendedPhenotype().time == 0) do
+            node.setExtendedPhenotype(NULL)
+        end
+    end
+end
+
+countA = countATypeNodes(nodes)
+countB = countBTypeNodes(nodes)
+
+//outputs the total count of A and B type nodes, followed by the result
+// A = fixation of A. B = fixation of B. Undefined = no fixation
+if (countA = nodes.size()) do
+    print(countA+','+countB+','+'A')
+end else if (countB = nodes.size()) do
+    print(countA+','+countB+','+'B')
+end else do
+    print(countA+','+countB+','+'Undefined')
+end
