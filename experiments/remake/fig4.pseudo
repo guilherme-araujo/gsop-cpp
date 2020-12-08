@@ -1,176 +1,65 @@
-nodes = read(graph.txt)
-simOptions = parse(args)
+nodes = readGraph()
+simOptions = readOptions()
 
-//returns the relative fitness of an individual.
-//its value is given a bonus if an extended phenotype is being occupied by it
-function getFitness(Node n) do
-    ePh = n.getExtendedPhenotype()
-    if (ePh is not NULL) do
-        return 1.0 + ePh.getBonus()
-    end else do
-        return 1.0
-    end
-end
-
-//returns the index of a chosen individual in a list, chosen randomly but weighted according to their relative fitness.
-function roulette(Node nodeList[]) do
-    roulette[]
-    sum = 0.0
-    for (n in nodeList) do
-        sum = sum + getFitness(n)
-        roulette.add(sum)
-    end
-    //choosing reproducing neighbor
-    chosenValue = randomRealNumber(0, sum)
-    chosenNeighborIndex = -1
-    for (r = 0; r < roulette.size(); r++) do
-        if roulette[r] > chosenValue do
-            chosenNeighborIndex = r
-            break
-        end 
-    end
-end
-
-//shuffle() randomly reorders node indexes
-shuffle(nodes)
-
-//initialization
+//initializing types
 for (i = 0; i < nodes.size(); i++) do
-    if (i < nodes.size()*0.5) do
+    if (i < nodes.size() / 2) do
         nodes[i].type = 'A'
-        //initialize type A states
-        if (i < simOptions.searchingAIndex) do
-            nodes[i].state = SEARCHING
-            nodes[i].stateTimer = randomIntegerNumber(0, 30)
-        end else if (i < simOptions.producingAIndex) do
-            nodes[i].state = PRODUCING
-            nodes[i].stateTimer = randomIntegerNumber(0, 30)
-        end else if (i < simOptions.usingAIndex) do
-            nodes[i].state = USING
-            //generates an extended phenotype with a random expiry time between 1 and 30 cycles
-            nodes[i].setExtendedPhenotype(new ExtendedPhenotype(simOptions.alphaA))
-        end else if (i < simOptions.usingOtherAIndex) do
-            nodes[i].state = USING_OTHER
-            //generates an extended phenotype with a random expiry time between 1 and 30 cycles
-            nodes[i].setExtendedPhenotype(new ExtendedPhenotype(simOptions.gammaA))
-        end
     end else do
         nodes[i].type = 'B'
-        //initialize type B states
-        if (i + nodes.size()*0.5 < simOptions.searchingBIndex) do
-            nodes[i].state = SEARCHING
-        end else if (i + nodes.size()*0.5 < simOptions.producingBIndex) do
-            nodes[i].state = PRODUCING
-        end else if (i + nodes.size()*0.5 < simOptions.usingBIndex) do
-            nodes[i].state = USING
-            //generates an extended phenotype with a random expiry time between 1 and 30 cycles
-            nodes[i].setExtendedPhenotype(new ExtendedPhenotype(simOptions.alphaB))
-        end else if (i + nodes.size()*0.5 < simOptions.usingOtherBIndex) do
-            nodes[i].state = USING_OTHER
-            //generates an extended phenotype with a random expiry time between 1 and 30 cycles
-            nodes[i].setExtendedPhenotype(new ExtendedPhenotype(simOptions.gammaB))
-        end
     end
 end
+
+//initializing node states 
+nodes.initializeStates(simOptions.initialStatesPercentages)
+//initialize extended phenotypes in individuals who start the simulation in the using or using other states
+nodes.initializeExtendedPhenotypes()
 
 //main cycle
 for (i = 0; i < simOptions.cycles; i++) do 
     shuffle(nodes)
     //Runs a number of death/birth cycles (4% in the article)
+
     for (d = 0; d < simOptions.deathsByCycle; d++) do
-        neighbors = node[d].getNeighbors()
-        chosenNeighborIndex = roulette(neighbors)
+        neighbors = nodes[d].getNeighbors()
+        chosenNeighborIndex = weightedRandomChoice(neighbors)
         //generating new individual
         newNode = new Node()
         newNode.type = nodes[chosenNeighborIndex].type 
-        newNode.setExtendedPhenotype(NULL)
         newNode.state = SEARCHING
         newNode.stateTimer = 30
+        newNode.setExtendedPhenotype(NULL)
+
         //saving extended phenotype reference
         abandoned = nodes[d].getExtendedPhenotype()
         //replaces old individual 
         nodes[d] = newNode
-        //if there is an abandoned extended phenotype, a random neighbor in the searching state may be selected to occupy it
-        if (abandoned is not NULL) do
-            shuffle(neighbors)
-            occupied = false
-            foreach (neighbor in neighbors) do
-                if (neighbor.state == SEARCHING) do
-                    if (neighbor.getExtendedPhenotype() is NULL) do
-                        //updates the value of the extended phenotype to gamma A or B, since it is being reused
-                        if (neighbor.type == 'A') do
-                            neighbor.setExtendedPhenotype(abandoned.setBonus(simOptions.gammaA))
-                            neighbor.state = USING_OTHER
-                        end else do
-                            neighbor.setExtendedPhenotype(abandoned.setBonus(simOptions.gammaB))
-                            neighbor.state = USING_OTHER
-                        end
-                        occupied = true
-                        break
-                    end
-                end
-            end
-            //checks if the extended phenotype has been occupied by a neighbor. If not, choose a random individual in the entire population
-            if (not occupied) do
-                shuffle(nodes)
-                foreach (node in nodes) do
-                    if (node.state == SEARCHING) do
-                        if (node.getExtendedPhenotype() is NULL) do
-                            //updates the value of the extended phenotype to gamma A or B, since it is being reused
-                            if (node.type == 'A') do
-                                node.setExtendedPhenotype(abandoned.setBonus(simOptions.gammaA))
-                                node.state = USING_OTHER
-                            end else do
-                                node.setExtendedPhenotype(abandoned.setBonus(simOptions.gammaB))
-                                node.state = USING_OTHER
-                            end
-                            break
-                        end    
-                    end   
-                end
-            end
+        
+        //attempt to assign an abandoned extended phenotype to a random type A neighbor in the searching state      
+        try do
+            searchingNeighbors = searchingStateIndividualsFrom(neighbors)
+            chosen = randomlyAssignExtendedPhenotypeTo(searchingNeighbors, abandoned)            
+            chosen.state = USING_OTHER
+        end catch(cantAssignExtendedPhenotypeError) do
+            //if no neighbors can accept a new extended phenotype, a new attempt is made with the other individuals in the searching state
+            try do
+                searchingNodes = searchingStateIndividualsFrom(nodes)
+                chosen = randomlyAssignExtendedPhenotypeTo(searchingNodes, abandoned) 
+                chosen.state = USING_OTHER
+            end 
         end
     end
+    
+    //update state timers and identify individuals who will start to build or use their own extended phenotypes
+    nodesWillBuild, nodesWillUse = updateStateTimers(nodes)
+    updateStateToBuilding(nodesWillBuild)
+    updateStateToUsing(nodesWillUse)
+    nodesWillUse.initializeExtendedPhenotypes()
     //updates extended phenotype expiry times
-    foreach (node in nodes) do
-        node.getExtendedPhenotype().time = node.getExtendedPhenotype().time - 1
-        if (node.getExtendedPhenotype().time == 0) do
-            node.setExtendedPhenotype(NULL)
-            node.state = SEARCHING
-            node.stateTimer = 30
-        end
-    end
-    //updates the state counter times for searching and producing individuals, and updates their states accordingly
-    foreach (node in nodes) do
-        if (node.state == SEARCHING) do
-            node.stateTimer = node.stateTimer - 1
-            if (node.stateTimer == 0) do
-                node.state = PRODUCING
-                node.stateTimer = 30
-            end
-        end else if (node.state == PRODUCING) do
-            node.stateTimer = node.stateTimer - 1
-            if (node.stateTimer == 0) do
-                if (node.type == 'A') do
-                    node.setExtendedPhenotype(new ExtendedPhenotype(simOptions.alphaA, 30))
-                end else do
-                    node.setExtendedPhenotype(new ExtendedPhenotype(simOptions.alphaB, 30))
-                end
-                node.state = USING
-            end
-        end
-    end
+    updateExtendedPhenotypeTimers(nodes)
+    //individuals whose extended phenotypes expire will transition into the searching state
+    nodesWillSearch = removeExpiredExtendedPhenotypes(nodes)    
+    updateStateToSearching(nodesWillSearch)
 end
 
-countA = countATypeNodes(nodes)
-countB = countBTypeNodes(nodes)
-
-//outputs the total count of A and B type nodes, followed by the result
-// A = fixation of A. B = fixation of B. Undefined = no fixation
-if (countA = nodes.size()) do
-    print(countA+','+countB+','+'A')
-end else if (countB = nodes.size()) do
-    print(countA+','+countB+','+'B')
-end else do
-    print(countA+','+countB+','+'Undefined')
-end
+print result(nodes)
