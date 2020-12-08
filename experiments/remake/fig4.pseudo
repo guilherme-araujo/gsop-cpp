@@ -100,8 +100,10 @@ for (i = 0; i < simOptions.cycles; i++) do
                         //updates the value of the extended phenotype to gamma A or B, since it is being reused
                         if (neighbor.type == 'A') do
                             neighbor.setExtendedPhenotype(abandoned.setBonus(simOptions.gammaA))
+                            neighbor.state = USING_OTHER
                         end else do
                             neighbor.setExtendedPhenotype(abandoned.setBonus(simOptions.gammaB))
+                            neighbor.state = USING_OTHER
                         end
                         occupied = true
                         break
@@ -117,8 +119,10 @@ for (i = 0; i < simOptions.cycles; i++) do
                             //updates the value of the extended phenotype to gamma A or B, since it is being reused
                             if (node.type == 'A') do
                                 node.setExtendedPhenotype(abandoned.setBonus(simOptions.gammaA))
+                                node.state = USING_OTHER
                             end else do
                                 node.setExtendedPhenotype(abandoned.setBonus(simOptions.gammaB))
+                                node.state = USING_OTHER
                             end
                             break
                         end    
