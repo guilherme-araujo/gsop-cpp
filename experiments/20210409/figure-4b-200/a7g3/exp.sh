@@ -8,8 +8,8 @@
 #SBATCH --mail-type=ALL
 #SBATCH --time=24:0:0
 
-#module load softwares/python/3.6-anaconda-5.0.1
-#module load compilers/gnu/7.3
+module load softwares/python/3.6-anaconda-5.0.1
+module load compilers/gnu/7.3
 
 #argument parsing
 for i in "$@"
