@@ -6,7 +6,7 @@
 ##SBATCH --hint=compute_bound
 #SBATCH --mail-user=guilherme.araujo@imd.ufrn.br
 #SBATCH --mail-type=ALL
-#SBATCH --time=1-0:0
+#SBATCH --time=24:0:0
 
 #module load softwares/python/3.6-anaconda-5.0.1
 #module load compilers/gnu/7.3
