@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#SBATCH --job-name=a1g9
+#SBATCH --job-name=a5g5
 #SBATCH --mem=96000
 #SBATCH --cpus-per-task=48
 ##SBATCH --hint=compute_bound
@@ -57,8 +57,8 @@ if [ -f "$FILE" ]; then
 	echo "scale=2; 0/1000" | bc > job-percent.txt
 	for i in $(seq 1 1000);
 	do
-		python3 main.py --operation=newGraph --graphtype=ba --numNodes=$NODES --numEdges=1
-		./$FILE samples 1000 ephBonus 0.09 ephBonusB 0.01 ephStartRatio 0.6 ephBuildingRatio 0.6666 ephReusingRatio 0.1666 ephPopHistory 0 threads $THREADNUM cycles 5000 ephTime $EPHTIME ni 0 sampleId $i printPartials 1 rBMA 0.1111 rBMB 9 bBA $BETA_A bBB $BETA_B >> a9g1.txt
+		python3 main.py --operation=newGraph --graphtype=ba --numNodes=$NODES --numEdges=3
+		./$FILE samples 1000 ephBonus 0.05 ephBonusB 0.05 ephStartRatio 0.6 ephBuildingRatio 0.6666 ephReusingRatio 0.1666 ephPopHistory 0 threads $THREADNUM cycles 5000 ephTime $EPHTIME ni 0 sampleId $i printPartials 1 rBMA 1 rBMB 1 bBA $BETA_A bBB $BETA_B >> a5g5.txt
 		echo "scale=2; $i/1000" | bc > job-percent.txt
 	done
 

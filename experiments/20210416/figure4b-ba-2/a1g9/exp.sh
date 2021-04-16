@@ -57,8 +57,8 @@ if [ -f "$FILE" ]; then
 	echo "scale=2; 0/1000" | bc > job-percent.txt
 	for i in $(seq 1 1000);
 	do
-		python3 main.py --operation=newGraph --graphtype=ba --numNodes=$NODES --numEdges=4
-		./$FILE samples 5000 ephBonus 0.01 ephBonusB 0.09 ephStartRatio 0.6 ephBuildingRatio 0.6666 ephReusingRatio 0.1666 ephPopHistory 0 threads $THREADNUM cycles 5000 ephTime $EPHTIME ni 0 sampleId $i printPartials 1 rBMA 9 rBMB 0.1111 bBA $BETA_A bBB $BETA_B >> a1g9.txt
+		python3 main.py --operation=newGraph --graphtype=ba --numNodes=$NODES --numEdges=2
+		./$FILE samples 1000 ephBonus 0.01 ephBonusB 0.09 ephStartRatio 0.6 ephBuildingRatio 0.6666 ephReusingRatio 0.1666 ephPopHistory 0 threads $THREADNUM cycles 5000 ephTime $EPHTIME ni 0 sampleId $i printPartials 1 rBMA 9 rBMB 0.1111 bBA $BETA_A bBB $BETA_B >> a1g9.txt
 		echo "scale=2; $i/1000" | bc > job-percent.txt
 	done
 
