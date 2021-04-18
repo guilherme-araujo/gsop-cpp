@@ -1,0 +1,6 @@
+BETA A  = 0.95
+BETA B  = 0.95
+EPHTIME = 30
+THREADNUM = 72
+NODES = 100
+gsop exists
