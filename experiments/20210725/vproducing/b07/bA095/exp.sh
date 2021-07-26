@@ -22,7 +22,7 @@ if [ -f "$FILE" ]; then
 	for i in $(seq 1 1000); 
 	do
 		python3 main.py --operation=newGraph --graphtype=ba --numNodes=500 --numEdges=4
-		./$FILE samples 1000 ephBonus 0.07 ephBonusB 0.05 ephStartRatio 0.4 ephBuildingRatio 0.5 ephReusingRatio 0.375 ephPopHistory 0 threads 72 cycles 0 ephTime 30 ni 0 sampleId $i printPartials 1 rBMA 1 rBMB 1 bBA 0.95 bBB 0.95 cheaterA 0.13333 cheaterB 0.4  sBA 1.0 >> a5g5.txt	
+		./$FILE samples 1000 ephBonus 0.07 ephBonusB 0.07 ephStartRatio 0.4 ephBuildingRatio 0.5 ephReusingRatio 0.375 ephPopHistory 0 threads 72 cycles 0 ephTime 30 ni 0 sampleId $i printPartials 1 rBMA 1 rBMB 1 bBA 0.95 bBB 0.95 cheaterA 0.13333 cheaterB 0.4  sBA 1.0 >> a5g5.txt	
 		echo "scale=2; $i/1000" | bc > job-percent.txt
 	done
 
